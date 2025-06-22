@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>IMEI Check (Guest) - IMEICHECK2.COM</title>
+  <title>IMEI Check - IMEICHECK2.COM</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Google Fonts: Inter -->
   <link href="https://fonts.googleapis.com/css?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -22,8 +22,6 @@
       --muted: #b0b0b0;
       --btn: #1e88e5;
       --btn-hover: #1565c0;
-      --paypal: #ffc439;
-      --paypal-hover: #ffb600;
       --radius: 16px;
       --shadow: 0 2px 32px 0 rgba(0,0,0,0.6);
     }
@@ -38,17 +36,10 @@
       scroll-behavior: smooth;
     }
     body, #mainLayout {
-      min-height: 100vh;
       height: 100vh;
+      min-height: 100vh;
       width: 100vw;
       overflow-x: hidden;
-      margin: 0;
-    }
-    #mainLayout {
-      display: flex;
-      align-items: stretch;
-      height: 100vh;
-      width: 100vw;
     }
     header {
       width: 100vw;
@@ -75,10 +66,9 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      position: absolute;
-      left: 0; right: 0; top: 0; bottom: 0;
       pointer-events: none;
       z-index: 1;
+      position: static;
     }
     .logo-title {
       font-weight: 700;
@@ -91,6 +81,7 @@
       text-align: center;
       pointer-events: auto;
       text-decoration: none;
+      z-index: 2;
     }
     .logo-title i {
       color: var(--accent);
@@ -102,7 +93,7 @@
       min-width: 180px;
       background: var(--secondary);
       height: 100vh;
-      position: relative;
+      position: fixed;
       left: 0;
       top: 0;
       display: flex;
@@ -113,7 +104,7 @@
       padding-top: 90px;
       transition: transform 0.2s cubic-bezier(.4,0,.2,1);
     }
-    .sidebar-guest-label {
+    .sidebar-username {
       margin: 0 0 16px 0;
       padding: 0 24px;
       font-size: 1.13rem;
@@ -125,9 +116,26 @@
       gap: 9px;
       letter-spacing: 0.5px;
     }
-    .sidebar-guest-label i {
+    .sidebar-username i {
       color: var(--accent);
       font-size: 1.25em;
+    }
+    .sidebar-balance-label {
+      font-weight: 600;
+      color: var(--success);
+      background: var(--primary);
+      border-radius: var(--radius);
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 1.07rem;
+      box-shadow: 0 1px 8px 0 rgba(34, 139, 34, 0.09);
+      margin: 0 24px 24px 24px;
+    }
+    .sidebar-balance-label i {
+      color: var(--success-dark);
+      font-size: 1.1em;
     }
     .sidebar-nav {
       display: flex;
@@ -135,12 +143,11 @@
       gap: 8px;
       padding: 0 16px;
     }
-    .sidebar-nav a,
-    .sidebar-nav button.sidebar-imei-btn {
+    .sidebar-nav a {
       color: var(--text);
       opacity: .85;
       font-weight: 600;
-      background: var(--secondary);
+      background: none;
       border: none;
       cursor: pointer;
       padding: 12px 16px;
@@ -152,10 +159,8 @@
       text-decoration: none !important;
       border-bottom: none !important;
       user-select: none;
-      display: block;
     }
-    .sidebar-nav a:hover, .sidebar-nav a.active,
-    .sidebar-nav button.sidebar-imei-btn:hover, .sidebar-nav button.sidebar-imei-btn.active {
+    .sidebar-nav a:hover, .sidebar-nav a.active {
       opacity: 1;
       color: var(--accent);
       background: #20252a;
@@ -182,10 +187,6 @@
       background: var(--btn-hover);
       color: #fff;
     }
-    .sidebar-nav .btn#registerBtnNav {
-      background: var(--success);
-      margin-top: 8px;
-    }
     /* --- Responsive Sidebar Hamburguesa (móvil) --- */
     .sidebar-toggle-btn {
       display: none;
@@ -208,8 +209,8 @@
     }
     @media (max-width: 900px) {
       .sidebar { width: 60px; min-width: 60px; }
-      .sidebar-guest-label { font-size: 1rem; padding: 0 6px; }
-      .sidebar-nav a, .sidebar-nav .btn, .sidebar-nav button.sidebar-imei-btn { font-size: .96rem; padding: 10px 9px; }
+      .sidebar-username { font-size: 1rem; padding: 0 6px; }
+      .sidebar-nav a, .sidebar-nav .btn { font-size: .96rem; padding: 10px 9px; }
       .header-inner { padding: 0 8px; }
     }
     @media (max-width: 650px) {
@@ -222,7 +223,7 @@
       .sidebar.open { transform: translateX(0); display: flex; }
       .sidebar-toggle-btn { display: block; margin-left: 8px; z-index: 3; background: none; border: none; }
       .sidebar-backdrop.open { display: block; }
-      .main-content { margin-left: 0 !important; }
+      .main-content { margin-left: 0 !important; width: 100vw;}
       .header-title-center {
         flex: 1;
         justify-content: center;
@@ -236,55 +237,66 @@
       }
     }
     .main-content {
-      flex: 1 1 0;
-      min-width: 0;
+      margin-left: 230px;
       min-height: 100vh;
-      width: 100%;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
+      width: calc(100vw - 230px);
       box-sizing: border-box;
-      background: none;
     }
     @media (max-width: 900px) {
-      .main-content { margin-left: 60px; }
+      .main-content {
+        margin-left: 60px;
+        width: calc(100vw - 60px);
+      }
     }
     @media (max-width: 650px) {
-      .main-content { margin-left: 0; }
+      .main-content {
+        margin-left: 0;
+        width: 100vw;
+      }
     }
-    .imei-check-box {
-      max-width: 420px;
+    #imeiCheckPageArea {
       width: 100%;
+      max-width: 460px;
       background: var(--secondary);
       color: var(--text);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       padding: 32px 28px;
       text-align: center;
-      margin: 0;
-      position: relative;
+      margin: 60px auto 0 auto;
+      display: block;
     }
-    .imei-check-box h2 {
+    #imeiCheckPageArea form {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    #imeiCheckPageArea h2 {
       margin-top: 0;
       font-weight: 800;
       margin-bottom: 18px;
     }
-    .imei-hint-under-label {
-      display: block;
-      color: #8a98a8;
+    .imei-hint {
+      color: var(--muted);
       font-size: 0.98em;
-      font-weight: 400;
-      margin: 4px 0 10px 0;
-      text-align: left;
+      margin-bottom: 8px;
+      display: block;
+      text-align: center;
+      font-style: italic;
     }
-    .imei-check-box label {
+    #imeiCheckPageArea label {
       color: var(--muted);
       font-weight: 600;
       margin-bottom: 8px;
       display: block;
-      text-align: left;
+      text-align: center;
     }
-    .imei-check-box input[type="text"], .imei-check-box select, .imei-check-box input[type="email"] {
+    #imeiCheckInput {
       width: 100%;
       padding: 16px;
       font-size: 1.1rem;
@@ -297,100 +309,68 @@
       text-align: center;
       box-sizing: border-box;
       appearance: none;
+      min-height: 48px;
+      resize: vertical;
+      font-family: 'Inter', Arial, sans-serif;
+      transition: min-height 0.1s;
     }
-    .imei-check-box input[type="text"]:focus, 
-    .imei-check-box input[type="email"]:focus, 
-    .imei-check-box select:focus {
-      background: #23272a;
-    }
-    .imei-check-box select {
+    #imeiCheckPageArea select {
+      width: 100%;
+      padding: 16px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: var(--radius);
+      margin-bottom: 16px;
+      background: #191b1d;
+      color: #fff;
+      outline: none;
+      text-align: center;
+      box-sizing: border-box;
+      appearance: none;
       cursor: pointer;
     }
-    .imei-check-box .info-box {
+    #imeiCheckPageArea select:focus {
       background: #23272a;
-      color: #8bc34a;
-      border-radius: var(--radius);
-      padding: 14px;
-      margin-bottom: 16px;
-      font-size: 1rem;
     }
-    .btn {
+    #imeiCheckPageArea .btn {
+      width: 100%;
+      padding: 15px;
+      margin-top: 10px;
       background: var(--btn);
       color: #fff;
       border: none;
       border-radius: var(--radius);
-      padding: 10px 24px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: var(--shadow);
-      transition: background .2s, color .2s;
-      display: inline-block;
-    }
-    .btn:hover {
-      background: var(--btn-hover);
-      color: #fff;
-    }
-    .btn-paypal {
-      background: var(--paypal);
-      color: #222;
-      border: none;
-      border-radius: var(--radius);
-      padding: 10px 24px;
-      font-size: 1rem;
+      font-size: 1.15rem;
       font-weight: 700;
-      cursor: pointer;
       box-shadow: var(--shadow);
-      transition: background .2s, color .2s;
-      margin-top: 8px;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
+      cursor: pointer;
+      transition: background .2s;
+      display: inline-block;
+      position: relative;
+    }
+    #imeiCheckPageArea .btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+    #imeiCheckPageArea .info-box { display: none !important; }
+    #imeiResultBox {
+      margin-top: 24px;
       width: 100%;
+      text-align: left;
     }
-    .btn-paypal:hover {
-      background: var(--paypal-hover);
-      color: #222;
-    }
-    /* Loader overlay */
-    .loader-overlay {
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(24,26,27,0.85);
-      z-index: 99;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      border-radius: var(--radius);
-      font-size: 1.1rem;
-    }
-    .loader-circle {
-      border: 6px solid #e0e0e0;
-      border-top: 6px solid var(--accent);
+    .loader {
+      border: 2.5px solid #1e88e5;
+      border-top: 2.5px solid #fff;
       border-radius: 50%;
-      width: 48px;
-      height: 48px;
-      animation: spin 1s linear infinite;
-      margin-bottom: 18px;
+      width: 18px;
+      height: 18px;
+      display: inline-block;
+      animation: spin 0.7s linear infinite;
+      vertical-align: middle;
     }
     @keyframes spin {
-      0% {transform: rotate(0deg);}
-      100% {transform: rotate(360deg);}
-    }
-    #orderResultBox {
-      margin: 14px 0 0 0;
-      background: #20252a;
-      color: #fff;
-      border-radius: var(--radius);
-      padding: 16px 10px;
-      font-size: 1.08rem;
-      word-break: break-word;
-      font-family: 'Inter', Arial, sans-serif;
-      white-space: pre-line;
-      display:none;
+      0% { transform: rotate(0deg);}
+      100% { transform: rotate(360deg);}
     }
     footer {
       background: #121212;
@@ -398,7 +378,7 @@
       text-align: center;
       padding: 32px 0 12px 0;
       font-size: 1rem;
-      border-radius: var(--radius) var(--radius) 0 0;
+      border-radius: 16px 16px 0 0;
       margin-top: 56px;
     }
     .footer-links {
@@ -412,20 +392,26 @@
       color: #888;
       font-size: 1.1rem;
       opacity: .8;
+      text-decoration: none !important;
+      border-bottom: none !important;
     }
     .footer-links a:hover {
       color: #fff;
       opacity: 1;
+      text-decoration: none !important;
+      border-bottom: none !important;
     }
     @media (max-width: 520px) {
-      .imei-check-box {
+      #imeiCheckPageArea {
         padding: 18px 8px;
         max-width: 98vw;
       }
       .main-content {
-        margin-top: 24px;
+        padding: 0 2vw;
       }
-      .sidebar-nav { gap: 4px; }
+      #imeiCheckInput {
+        min-height: 32px;
+      }
     }
   </style>
 </head>
@@ -434,61 +420,54 @@
     <div class="header-inner">
       <button class="sidebar-toggle-btn" id="sidebarToggleBtn" aria-label="Open menu"><i class="ri-menu-line"></i></button>
       <div class="header-title-center">
-        <a class="logo-title" href="index.html">
+        <a class="logo-title" href="landing-client.html">
           <i class="ri-shield-check-fill"></i> IMEICHECK2.COM
         </a>
       </div>
     </div>
   </header>
 
-  <div id="mainLayout">
+  <div id="mainLayout" style="display:flex; min-height:100vh;">
     <aside class="sidebar" id="sidebarNav">
-      <div class="sidebar-guest-label">
+      <div class="sidebar-username" id="sidebarUsername">
         <i class="ri-user-3-fill"></i>
-        <span>Guest</span>
+        <span id="sidebarUsernameText">Username</span>
+      </div>
+      <div class="sidebar-balance-label" id="userBalanceNav" style="display:none;">
+        <i class="ri-wallet-3-fill"></i>
+        Balance: <span id="balanceAmount">$0.00</span>
       </div>
       <nav class="sidebar-nav">
-        <a href="index.html">Home</a>
-        <a href="#features">Features</a>
-        <button class="sidebar-imei-btn" id="sidebarImeiBtn" style="background:var(--secondary);color:var(--text);"><i class="ri-search-eye-line"></i> IMEI Check</button>
-        <a href="#why">Why Us?</a>
-        <button class="btn" id="loginBtnNav" style="margin-top:18px;">Login</button>
-        <button class="btn" id="registerBtnNav" style="background:var(--success);margin-top:8px;">Register</button>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="imei-check.html" class="active">IMEI Check</a>
+        <a href="add-funds.html">Add Funds</a>
+        <a href="order-history.html">Order History</a>
+        <a href="invoices.html">Invoices</a>
+        <button class="btn" id="profileBtnNav" style="margin-top:18px;">Profile</button>
       </nav>
     </aside>
     <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
     <main class="main-content">
-      <div class="imei-check-box">
-        <h2>IMEI Check (Guest)</h2>
+      <div id="imeiCheckPageArea">
+        <h2>IMEI Check</h2>
         <form id="imeiCheckPageForm" autocomplete="off">
-          <label for="guestEmailInput"><i class="ri-mail-line"></i> Email (optional, receive your results by email)</label>
-          <input type="email" id="guestEmailInput" maxlength="90" placeholder="your@email.com" autocomplete="email" style="margin-bottom:18px;">
-          <label for="imeiCheckInput"><i class="ri-fingerprint-2-line"></i> Enter your IMEI</label>
-          <span class="imei-hint-under-label">Find your IMEI by dialing <b>*#06#</b> on your device</span>
-          <input type="text" id="imeiCheckInput" maxlength="15" minlength="15" pattern="\d{15}" placeholder="e.g. 356939052799999" required>
+          <span class="imei-hint">Find your IMEI by dialing <b>*#06#</b> on your device</span>
+          <label for="imeiCheckInput"><i class="ri-fingerprint-2-line"></i> Enter up to 50 IMEIs (one per line)</label>
+          <textarea id="imeiCheckInput" rows="1" maxlength="800" placeholder="One IMEI per line, up to 50 IMEIs" required></textarea>
+
           <label for="serviceSelect"><i class="ri-service-fill"></i> Select a Service</label>
           <select id="serviceSelect" required>
             <option value="">Loading services...</option>
           </select>
-          <button class="btn" type="submit"><i class="ri-bank-card-line"></i> Pay with Card (Stripe)</button>
+
+          <button class="btn" type="submit" id="submitBtn">
+            <span id="submitBtnText"><i class="ri-search-line"></i> Submit IMEIs</span>
+            <span id="submitBtnLoader" style="display:none;vertical-align:middle;">
+              <span class="loader" style="margin-left:8px;vertical-align:middle;"></span>
+            </span>
+          </button>
+          <div id="imeiResultBox"></div>
         </form>
-        <div style="margin: 18px 0 10px 0; text-align:center;">
-          <span style="color:#b0b0b0;">or</span>
-        </div>
-        <button class="btn-paypal" id="paypalBtn">
-          <img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_111x69.jpg" alt="PayPal" style="height:23px;vertical-align:middle;">
-          Pay with PayPal Payouts
-        </button>
-        <div class="info-box">
-          <i class="ri-exchange-dollar-line"></i>
-          Transfers allowed too, register for details.
-        </div>
-        <div id="stripeMessage" style="margin-top:18px;font-weight:bold;"></div>
-        <div id="orderResultBox"></div>
-        <div id="loaderOverlay" class="loader-overlay" style="display:none;">
-          <div class="loader-circle"></div>
-          <div id="waitText" style="font-weight:700;">Wait a few seconds for your results.</div>
-        </div>
       </div>
     </main>
   </div>
@@ -505,7 +484,7 @@
   </footer>
 
   <script>
-    // Sidebar responsive toggle
+    // Sidebar responsive toggle (hamburguesa)
     (function() {
       const sidebar = document.getElementById('sidebarNav');
       const toggleBtn = document.getElementById('sidebarToggleBtn');
@@ -527,78 +506,31 @@
         if (e.key === 'Escape') closeSidebar();
       });
       sidebar.addEventListener('click', function(e) {
-        if (e.target.tagName === 'A' || e.target.classList.contains('btn') || e.target.classList.contains('sidebar-imei-btn')) {
+        if (e.target.tagName === 'A' || e.target.classList.contains('btn')) {
           closeSidebar();
         }
       });
     })();
 
-    // Prefill IMEI and email if passed in URL
     function getQueryParam(name) {
       const urlParams = new URLSearchParams(window.location.search);
       return urlParams.get(name);
     }
-    const imeiPrefill = getQueryParam('imei');
-    if (imeiPrefill && /^\d{15}$/.test(imeiPrefill)) {
-      document.getElementById('imeiCheckInput').value = imeiPrefill;
-    }
-    const guestEmailPrefill = getQueryParam('email');
-    if (guestEmailPrefill) {
-      document.getElementById('guestEmailInput').value = guestEmailPrefill;
+    const imeisPrefill = getQueryParam('imeis');
+    const imeiTextarea = document.getElementById('imeiCheckInput');
+    if (imeisPrefill) {
+      imeiTextarea.value = imeisPrefill.split(',').join('\n');
     }
 
-    // ---- Stripe resultado de pago, muestra loader y espera resultado ----
-    window.addEventListener('DOMContentLoaded', async () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const paymentStatus = urlParams.get('payment');
-      const sessionId = urlParams.get('session_id');
-      const stripeMessage = document.getElementById('stripeMessage');
-      const loaderOverlay = document.getElementById('loaderOverlay');
-      const orderResultBox = document.getElementById('orderResultBox');
+    function adjustRows() {
+      let lines = imeiTextarea.value.split('\n').length;
+      if (imeiTextarea.value !== "" && imeiTextarea.value[imeiTextarea.value.length-1] === '\n') lines += 1;
+      imeiTextarea.rows = Math.max(1, Math.min(lines, 15));
+      imeiTextarea.style.minHeight = (imeiTextarea.rows * 24 + 24) + "px";
+    }
+    imeiTextarea.addEventListener('input', adjustRows);
+    adjustRows();
 
-      if (paymentStatus === 'success' && sessionId) {
-        stripeMessage.textContent = '✅ Payment successful. Please wait for your results...';
-        stripeMessage.style.color = '#4caf50';
-        loaderOverlay.style.display = 'flex';
-        orderResultBox.style.display = 'none';
-
-        // Polling a backend para saber cuándo hay resultado
-        const pollResult = async () => {
-          try {
-            // Buscar la order via session_id (necesitas un endpoint que haga el join con imei_orders)
-            const res = await fetch(window.BACKEND_URL + `/api/imei-orders/by-session/${encodeURIComponent(sessionId)}`);
-            if (!res.ok) throw new Error('Order not found');
-            const data = await res.json();
-
-            if (data && data.status === 'completed' && data.result) {
-              loaderOverlay.style.display = 'none';
-              orderResultBox.style.display = 'block';
-              orderResultBox.textContent = data.result;
-              stripeMessage.textContent = '✅ Your result is ready!';
-              stripeMessage.style.color = '#4caf50';
-              return;
-            }
-            if (data && data.status === 'failed') {
-              loaderOverlay.style.display = 'none';
-              orderResultBox.style.display = 'block';
-              orderResultBox.textContent = '❌ Order failed. Please contact support.';
-              stripeMessage.textContent = '';
-              return;
-            }
-            // Si no está listo, espera y vuelve a pedir
-            setTimeout(pollResult, 2200);
-          } catch (err) {
-            setTimeout(pollResult, 4000);
-          }
-        };
-        pollResult();
-      } else if (paymentStatus === 'cancel') {
-        stripeMessage.style.color = '#e53935';
-        stripeMessage.textContent = 'Pago cancelado. Puedes intentarlo de nuevo.';
-      }
-    });
-
-    // Populate services dropdown from backend
     async function loadServices() {
       const select = document.getElementById('serviceSelect');
       select.innerHTML = '<option value="">Loading services...</option>';
@@ -610,8 +542,8 @@
           data.forEach(service => {
             const opt = document.createElement('option');
             opt.value = service.service_id;
-            opt.textContent = service.service_name + 
-              (service.price_guest ? ` ($${service.price_guest})` : '');
+            opt.textContent = service.service_name +
+              (service.price_registered ? ` ($${service.price_registered})` : '');
             select.appendChild(opt);
           });
         } else {
@@ -623,74 +555,149 @@
     }
     loadServices();
 
-    // IMEI Check form submit (pago Stripe para guest, no usa balance)
+    // REFRESH BALANCE (llama después de pedido exitoso o recarga exitosa)
+    async function refreshUserBalance() {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+        const res = await fetch(window.BACKEND_URL + '/api/users/me', {
+          headers: {
+            Authorization: 'Bearer ' + token
+          }
+        });
+        if (!res.ok) return;
+        const user = await res.json();
+        if (typeof user.balance === 'number' || typeof user.balance === 'string') {
+          document.getElementById('userBalanceNav').style.display = '';
+          document.getElementById('balanceAmount').textContent =
+            '$' + Number(user.balance).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
+      } catch (e) {
+        document.getElementById('userBalanceNav').style.display = 'none';
+      }
+    }
+
     document.getElementById('imeiCheckPageForm').onsubmit = async function(e) {
       e.preventDefault();
-      const imei = document.getElementById('imeiCheckInput').value;
+      const imeiResultBox = document.getElementById('imeiResultBox');
+      const submitBtn = document.getElementById('submitBtn');
+      const submitBtnText = document.getElementById('submitBtnText');
+      const submitBtnLoader = document.getElementById('submitBtnLoader');
+      imeiResultBox.innerHTML = '';
+
+      submitBtn.disabled = true;
+      submitBtnText.textContent = 'Procesando';
+      submitBtnLoader.style.display = 'inline-block';
+
+      const imeisRaw = imeiTextarea.value.trim();
       const service = document.getElementById('serviceSelect').value;
-      const guestEmail = document.getElementById('guestEmailInput').value.trim();
-      if (!/^\d{15}$/.test(imei)) {
-        alert("Please enter a valid 15-digit IMEI.");
+
+      if (!imeisRaw) {
+        imeiResultBox.innerHTML = '<div style="color:#f55;">Please enter at least one IMEI.</div>';
+        resetBtn();
         return false;
       }
-      if (!service) {
-        alert("Please select a service.");
+      const imeiLines = imeisRaw.split('\n').map(x => x.trim()).filter(x => x.length > 0);
+      if (imeiLines.length === 0) {
+        imeiResultBox.innerHTML = '<div style="color:#f55;">Please enter at least one IMEI.</div>';
+        resetBtn();
         return false;
       }
-      // Validar email si lo proporcionan
-      if (guestEmail && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(guestEmail)) {
-        alert('Please enter a valid email address.');
+      if (imeiLines.length > 50) {
+        imeiResultBox.innerHTML = '<div style="color:#f55;">You can submit up to 50 IMEIs at once.</div>';
+        resetBtn();
         return false;
       }
-      try {
-        const res = await fetch(window.BACKEND_URL + '/api/payments/stripe/imei-checkout', {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({ imei, service_id: service, guest_email: guestEmail })
-        });
-        const data = await res.json();
-        if (data.url) {
-          window.location.href = data.url; // Redirige a Stripe
-        } else {
-          alert(data.error || "Error creating Stripe session");
+      for (const imei of imeiLines) {
+        if (!/^\d{15}$/.test(imei)) {
+          imeiResultBox.innerHTML = `<div style="color:#f55;">All IMEIs must be 15 digits. Invalid: ${imei}</div>`;
+          resetBtn();
+          return false;
         }
-      } catch (err) {
-        alert("Error connecting to server");
-      }
-    };
-
-    // PayPal payouts button (demo only)
-    document.getElementById('paypalBtn').onclick = function(e) {
-      e.preventDefault();
-      const imei = document.getElementById('imeiCheckInput').value;
-      const service = document.getElementById('serviceSelect').value;
-      if (!/^\d{15}$/.test(imei)) {
-        alert("Please enter a valid 15-digit IMEI before proceeding to PayPal.");
-        document.getElementById('imeiCheckInput').focus();
-        return false;
       }
       if (!service) {
-        alert("Please select a service before proceeding to PayPal.");
-        document.getElementById('serviceSelect').focus();
+        imeiResultBox.innerHTML = '<div style="color:#f55;">Please select a service.</div>';
+        resetBtn();
         return false;
       }
-      alert("Redirecting to PayPal payout for IMEI: " + imei + "\nService: " + service);
-      // window.location.href = window.BACKEND_URL + "/api/payments/paypal?imei=" + encodeURIComponent(imei) + "&service_id=" + encodeURIComponent(service);
+
+      const token = localStorage.getItem('token');
+      try {
+        const res = await fetch(window.BACKEND_URL + '/api/imei-orders', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { 'Authorization': 'Bearer ' + token } : {})
+          },
+          body: JSON.stringify({
+            imeis: imeiLines,
+            service_id: service
+          })
+        });
+
+        const data = await res.json();
+
+        // SOLO mostrar el texto de api.result de cada IMEI
+        if (Array.isArray(data)) {
+          imeiResultBox.innerHTML = data.map(item =>
+            `<div style="background:#23272a;padding:18px 14px;border-radius:14px;margin-top:20px;white-space:pre-line;">
+              ${item && item.api && typeof item.api.result === "string" ? item.api.result : "Sin resultado"}
+            </div>`
+          ).join('');
+        } else if (data.api && typeof data.api.result === "string") {
+          imeiResultBox.innerHTML = `<div style="background:#23272a;padding:18px 14px;border-radius:14px;margin-top:20px;white-space:pre-line;">${data.api.result}</div>`;
+        } else if (typeof data.result === "string") {
+          imeiResultBox.innerHTML = `<div style="background:#23272a;padding:18px 14px;border-radius:14px;margin-top:20px;white-space:pre-line;">${data.result}</div>`;
+        } else {
+          imeiResultBox.innerHTML = `<div style="color:#f55;">No se pudo procesar el resultado.</div>`;
+        }
+
+        // Refrescar balance después de pedido exitoso
+        refreshUserBalance();
+
+      } catch (err) {
+        imeiResultBox.innerHTML = `<div style="color:#f55;">Network or server error</div>`;
+      }
+      resetBtn();
       return false;
+
+      function resetBtn() {
+        submitBtn.disabled = false;
+        submitBtnText.innerHTML = '<i class="ri-search-line"></i> Submit IMEIs';
+        submitBtnLoader.style.display = 'none';
+      }
     };
 
-    // Login & Register nav buttons
-    document.getElementById('loginBtnNav').onclick = function() {
-      window.location.href = "/login";
-    };
-    document.getElementById('registerBtnNav').onclick = function() {
-      window.location.href = "/login#register";
+    document.getElementById('profileBtnNav').onclick = function() {
+      window.location.href = "profile.html";
     };
 
-    // Sidebar IMEI Check button
-    document.getElementById('sidebarImeiBtn').onclick = function() {
-      window.location.href = "imei-check-guest.html";
-    };
+    async function getUserInfo() {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+
+        const res = await fetch(window.BACKEND_URL + '/api/users/me', {
+          headers: {
+            Authorization: 'Bearer ' + token
+          }
+        });
+        if (!res.ok) return;
+
+        const user = await res.json();
+        if (user.username) {
+          document.getElementById('sidebarUsernameText').textContent = user.username;
+        }
+        if (typeof user.balance === 'number' || typeof user.balance === 'string') {
+          document.getElementById('userBalanceNav').style.display = '';
+          document.getElementById('balanceAmount').textContent =
+            '$' + Number(user.balance).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
+      } catch (e) {
+        document.getElementById('userBalanceNav').style.display = 'none';
+      }
+    }
+    getUserInfo();
   </script>
 </body>
 </html>
