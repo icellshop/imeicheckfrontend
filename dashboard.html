@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>IMEICHECK2.COM - Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Google Fonts: Inter -->
+  <link href="https://fonts.googleapis.com/css?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- Remixicon Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+  <style>
+    body {
+      background: #181a1b;
+      color: #f4f4f4;
+      font-family: 'Inter', Arial, sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #181a1b;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 0 0;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .header-inner {
+      width: 100vw;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      height: 80px;
+    }
+    .header-title-center {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      pointer-events: none;
+      z-index: 1;
+      position: static;
+    }
+    .logo-title {
+      font-weight: 700;
+      font-size: 2rem;
+      letter-spacing: 1px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-align: center;
+      pointer-events: auto;
+      text-decoration: none;
+      z-index: 2;
+    }
+    .logo-title i {
+      color: #1e88e5;
+      font-size: 2.2rem;
+      margin-right: 4px;
+    }
+    .sidebar {
+      width: 230px;
+      min-width: 180px;
+      background: #212325;
+      height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      box-shadow: 2px 0 12px 0 rgba(0,0,0,0.18);
+      z-index: 100;
+      padding-top: 90px;
+      transition: transform 0.2s cubic-bezier(.4,0,.2,1);
+    }
+    .sidebar-username {
+      margin: 0 0 16px 0;
+      padding: 0 24px;
+      font-size: 1.13rem;
+      font-weight: 700;
+      color: #fff;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      letter-spacing: 0.5px;
+    }
+    .sidebar-username i {
+      color: #1e88e5;
+      font-size: 1.25em;
+    }
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 0 16px;
+    }
+    .sidebar-nav a {
+      color: #f4f4f4;
+      opacity: .85;
+      font-weight: 600;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 12px 16px;
+      border-radius: 20px;
+      font-family: inherit;
+      transition: opacity .18s, color .18s, background .17s;
+      font-size: 1.08rem;
+      text-align: left;
+      text-decoration: none !important;
+      border-bottom: none !important;
+      user-select: none;
+    }
+    .sidebar-nav a:hover, .sidebar-nav a.active {
+      opacity: 1;
+      color: #1e88e5;
+      background: #222437;
+      text-decoration: none !important;
+      border-bottom: none !important;
+    }
+    .sidebar-nav .btn {
+      margin-top: 18px;
+      width: 100%;
+      justify-content: center;
+      font-size: 1.08rem;
+      background: #e53935;
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      padding: 14px 0;
+      font-weight: 700;
+      box-shadow: 0 4px 32px 0 rgba(0,0,0,0.6);
+      cursor: pointer;
+      transition: background .2s;
+      display: inline-block;
+    }
+    .sidebar-nav .btn:hover {
+      background: #b71c1c;
+      color: #fff;
+    }
+    .main-content {
+      margin-left: 230px;
+      padding: 36px 24px;
+      min-height: 100vh;
+      background: #181a1b;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    .coming-soon-box {
+      background: #222437;
+      border-radius: 20px;
+      box-shadow: 0 4px 32px 0 rgba(0,0,0,0.6);
+      padding: 50px 70px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 400px;
+      margin: auto;
+    }
+    .coming-soon-icon {
+      font-size: 3.2rem;
+      color: #1e88e5;
+      margin-bottom: 18px;
+    }
+    .coming-soon-title {
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: #f4f4f4;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+    .coming-soon-desc {
+      color: #a7adc1;
+      font-size: 1.12rem;
+      text-align: center;
+      font-weight: 600;
+    }
+    @media (max-width: 900px) {
+      .sidebar { width: 60px; min-width: 60px; }
+      .sidebar-username { font-size: 1rem; padding: 0 6px; }
+      .sidebar-nav a, .sidebar-nav .btn { font-size: .96rem; padding: 10px 9px; }
+      .header-inner { padding: 0 8px; }
+      .main-content { margin-left: 60px; }
+    }
+    @media (max-width: 650px) {
+      .header-inner {
+        justify-content: flex-start;
+        padding-right: 0;
+        padding-left: 0;
+      }
+      .sidebar { transform: translateX(-100%); width: 85vw; max-width: 310px; display: flex; }
+      .sidebar.open { transform: translateX(0); display: flex; }
+      .sidebar-toggle-btn { display: block; margin-left: 8px; z-index: 3; background: none; border: none; color: #1e88e5; font-size: 2.3em;}
+      .sidebar-backdrop.open { display: block; }
+      .main-content { margin-left: 0; }
+      .header-title-center {
+        flex: 1;
+        justify-content: center;
+        align-items: center;
+        position: static;
+        pointer-events: none;
+      }
+      .logo-title {
+        font-size: 1.3rem;
+        pointer-events: auto;
+      }
+      .coming-soon-box { padding: 35px 12px; }
+    }
+    .sidebar-toggle-btn {
+      display: none;
+      position: absolute;
+      left: 16px;
+      top: 18px;
+      background: none;
+      border: none;
+      color: #1e88e5;
+      font-size: 2.3em;
+      z-index: 200;
+      cursor: pointer;
+    }
+    .sidebar-backdrop {
+      display: none;
+      background: rgba(0,0,0,0.32);
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: 99;
+    }
+    .footer-links {
+      margin: 0 0 12px 0;
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      align-items: center;
+    }
+    .footer-links a {
+      color: #888;
+      font-size: 1.1rem;
+      opacity: .8;
+    }
+    .footer-links a:hover {
+      color: #fff;
+      opacity: 1;
+    }
+    footer {
+      background: #121212;
+      color: #888;
+      text-align: center;
+      padding: 32px 0 12px 0;
+      font-size: 1rem;
+      border-radius: 20px 20px 0 0;
+      margin-top: 56px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <button class="sidebar-toggle-btn" id="sidebarToggleBtn" aria-label="Open menu"><i class="ri-menu-line"></i></button>
+      <div class="header-title-center">
+        <a class="logo-title" href="landing-client.html">
+          <i class="ri-shield-check-fill"></i> IMEICHECK2.COM
+        </a>
+      </div>
+    </div>
+  </header>
+  <div id="mainLayout" style="display:flex; min-height:100vh;">
+    <aside class="sidebar" id="sidebarNav">
+      <div class="sidebar-username" id="sidebarUsername">
+        <i class="ri-user-3-fill"></i>
+        <span id="sidebarUsernameText">User</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="active">Dashboard</a>
+        <a href="imei-check.html">IMEI Check</a>
+        <a href="add-funds.html">Add Funds</a>
+        <a href="order-history.html">Order History</a>
+        <a href="invoices.html">Invoices</a>
+        <button class="btn" id="profileBtnNav" style="margin-top:18px;">Profile</button>
+      </nav>
+    </aside>
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+    <main class="main-content">
+      <div class="coming-soon-box">
+        <div class="coming-soon-icon"><i class="ri-dashboard-line"></i></div>
+        <div class="coming-soon-title">COMING SOON!</div>
+        <div class="coming-soon-desc">
+          The dashboard page is under development.<br>
+          Stay tuned for updates.
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer>
+    <div class="footer-links">
+      <a href="#">Terms of Service</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Contact</a>
+    </div>
+    <div>
+      &copy; 2025 IMEICHECK2.COM. All rights reserved.
+    </div>
+  </footer>
+  <script>
+    // Sidebar responsive toggle
+    (function() {
+      const sidebar = document.getElementById('sidebarNav');
+      const toggleBtn = document.getElementById('sidebarToggleBtn');
+      const backdrop = document.getElementById('sidebarBackdrop');
+      function openSidebar() {
+        sidebar.classList.add('open');
+        backdrop.classList.add('open');
+      }
+      function closeSidebar() {
+        sidebar.classList.remove('open');
+        backdrop.classList.remove('open');
+      }
+      toggleBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        openSidebar();
+      });
+      backdrop.addEventListener('click', closeSidebar);
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeSidebar();
+      });
+      sidebar.addEventListener('click', function(e) {
+        if (e.target.tagName === 'A' || e.target.classList.contains('btn')) {
+          closeSidebar();
+        }
+      });
+    })();
+    // Opcional: perfil
+    document.getElementById('profileBtnNav').onclick = function() {
+      window.location.href = "clientarea.html#profile";
+    };
+  </script>
+</body>
+</html>
