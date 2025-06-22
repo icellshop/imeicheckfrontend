@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Login - IMEICHECK2.COM</title>
+  <title>IMEICHECK2.COM - IMEI Lookup</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Google Fonts: Inter -->
   <link href="https://fonts.googleapis.com/css?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -17,12 +17,13 @@
       --accent: #1e88e5;
       --accent-dark: #1a73e8;
       --success: #43a047;
-      --danger: #e53935;
+      --success-dark: #388e3c;
       --text: #f4f4f4;
       --muted: #b0b0b0;
+      --btn: #1e88e5;
+      --btn-hover: #1565c0;
       --radius: 16px;
       --shadow: 0 2px 32px 0 rgba(0,0,0,0.6);
-      --sidebar-width: 230px;
     }
     html, body {
       margin: 0;
@@ -88,7 +89,7 @@
       margin-right: 4px;
     }
     .sidebar {
-      width: var(--sidebar-width);
+      width: 230px;
       min-width: 180px;
       background: var(--secondary);
       height: 100vh;
@@ -156,7 +157,7 @@
       width: 100%;
       justify-content: center;
       font-size: 1.08rem;
-      background: var(--accent);
+      background: var(--btn);
       color: #fff;
       border: none;
       border-radius: var(--radius);
@@ -165,45 +166,21 @@
       box-shadow: var(--shadow);
       cursor: pointer;
       transition: background .2s;
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      display: inline-block;
     }
     .sidebar-nav .btn:hover {
-      background: #1565c0;
+      background: var(--btn-hover);
       color: #fff;
     }
-    .sidebar-nav .btn#registerBtnSidebar {
+    .sidebar-nav .btn#registerBtnNav {
       background: var(--success);
       margin-top: 8px;
-    }
-    .sidebar-nav .btn#registerBtnSidebar:hover {
-      background: #388e3c;
-    }
-    .sidebar-nav .btn i {
-      font-size: 1.25em;
-      margin-right: 6px;
-      margin-left: 0;
-    }
-    .main-content {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-    }
-    /* Desplazamiento para sidebar solo en desktop */
-    @media (min-width: 651px) {
-      .main-content {
-        margin-left: var(--sidebar-width);
-      }
     }
     @media (max-width: 900px) {
       .sidebar { width: 60px; min-width: 60px; }
       .sidebar-guest-label { font-size: 1rem; padding: 0 6px; }
       .sidebar-nav a, .sidebar-nav .btn, .sidebar-nav button.sidebar-imei-btn { font-size: .96rem; padding: 10px 9px; }
       .header-inner { padding: 0 8px; }
-      .main-content { margin-left: 60px; }
-      .login-card { max-width: 96vw; }
     }
     @media (max-width: 650px) {
       .sidebar { display: none; }
@@ -211,130 +188,174 @@
       .header-title-center { position: static; }
       .main-content { margin-left: 0 !important; }
     }
-    .login-card-wrapper {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      min-height: 0;
+    .main-content {
+      margin-left: 230px;
+      padding: 0;
+      min-height: 100vh;
+      transition: margin-left .21s;
     }
-    .login-card {
+    @media (max-width: 900px) {
+      .main-content { margin-left: 60px; }
+    }
+    @media (max-width: 650px) {
+      .main-content { margin-left: 0; }
+    }
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 64px 0 32px 0;
+      min-height: 60vh;
+      gap: 32px;
+    }
+    .hero h1 {
+      font-size: 2.6rem;
+      font-weight: 800;
+      line-height: 1.1;
+      margin: 0;
+      letter-spacing: -1px;
+    }
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--muted);
+      margin-bottom: 20px;
+      max-width: 540px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .search-box {
+      background: var(--secondary);
+      border-radius: var(--radius);
+      padding: 32px 24px;
+      box-shadow: var(--shadow);
+      display: inline-block;
       width: 100%;
       max-width: 420px;
+    }
+    .search-box label {
+      display: block;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 8px;
+      text-align: left;
+    }
+    .search-box .imei-hint-under-label {
+      display: block;
+      color: #8a98a8;
+      font-size: 0.98em;
+      font-weight: 400;
+      margin: 4px 0 10px 0;
+      text-align: left;
+    }
+    .search-box input[type="text"] {
+      width: 100%;
+      padding: 16px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: var(--radius);
+      margin-bottom: 16px;
+      background: #191b1d;
+      color: #fff;
+      outline: none;
+    }
+    .search-box input[type="text"]:focus {
+      background: #23272a;
+    }
+    .search-box button {
+      width: 100%;
+      padding: 14px;
+      font-size: 1.15rem;
+      border-radius: var(--radius);
+      font-weight: 700;
+      background: var(--btn);
+      border: none;
+      color: #fff;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .search-box button:hover {
+      background: var(--btn-hover);
+    }
+    .features {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 36px;
+      margin: 56px 0 32px 0;
+    }
+    .feature {
+      background: var(--secondary);
+      color: var(--text);
+      border-radius: var(--radius);
+      padding: 32px 28px;
+      min-width: 260px;
+      max-width: 340px;
+      box-shadow: var(--shadow);
+      text-align: center;
+      transition: transform .14s;
+    }
+    .feature:hover {
+      transform: translateY(-8px) scale(1.03);
+      background: #23272a;
+    }
+    .feature i {
+      font-size: 2.2rem;
+      color: var(--accent);
+      margin-bottom: 12px;
+      display: block;
+    }
+    .feature h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin: 0 0 8px 0;
+    }
+    .feature p {
+      color: var(--muted);
+      font-size: 1rem;
+      margin: 0;
+    }
+    .cta {
+      text-align: center;
+      margin: 32px 0 0 0;
+    }
+    .cta .btn {
+      font-size: 1.2rem;
+      padding: 18px 44px;
+      border-radius: calc(var(--radius) * 1.3);
+    }
+    .why {
       background: var(--secondary);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      padding: 32px 28px;
+      padding: 40px 24px;
+      margin: 56px 0 32px 0;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .why h2 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #fff;
+      margin: 0 0 18px 0;
       text-align: center;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
     }
-    .tab-nav {
-      display: flex;
-      justify-content: center;
-      gap: 14px;
-      margin-bottom: 22px;
-    }
-    .tab-nav button {
-      background: none;
-      border: none;
+    .why ul {
+      margin: 0;
+      padding: 0 0 0 16px;
       color: var(--muted);
+      font-size: 1.1rem;
+    }
+    footer {
+      background: #121212;
+      color: #888;
+      text-align: center;
+      padding: 32px 0 12px 0;
       font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      padding: 6px 18px;
-      border-radius: 8px 8px 0 0;
-      transition: color .2s, background .2s;
-    }
-    .tab-nav button.active, .tab-nav button:hover {
-      color: #fff;
-      background: #181a1b;
-    }
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 17px;
-      margin-top: 6px;
-      width: 100%;
-      max-width: 360px;
-      align-items: center;
-    }
-    label {
-      text-align: left;
-      color: var(--muted);
-      font-weight: 600;
-      margin-bottom: 6px;
-      width: 100%;
-    }
-    input[type="email"], input[type="password"], input[type="text"], input[type="number"], select {
-      background: #191b1d;
-      color: #fff;
-      border: none;
-      border-radius: var(--radius);
-      font-size: 1rem;
-      padding: 14px;
-      outline: none;
-      width: 100%;
-      box-sizing: border-box;
-      text-align: center;
-    }
-    select {
-      appearance: none;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      cursor: pointer;
-      background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="16" viewBox="0 0 20 20" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M5.516 8.548a.547.547 0 0 1 .77 0L10 12.263l3.714-3.715a.547.547 0 1 1 .77.771l-4.1 4.098a.547.547 0 0 1-.77 0l-4.1-4.098a.547.547 0 0 1 0-.771z"/></svg>');
-      background-repeat: no-repeat;
-      background-position: right 16px center;
-      background-size: 18px 18px;
-    }
-    input[type="submit"], button[type="submit"] {
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      border-radius: var(--radius);
-      font-size: 1rem;
-      font-weight: 600;
-      padding: 14px;
-      cursor: pointer;
-      box-shadow: var(--shadow);
-      margin-top: 6px;
-      transition: background .2s;
-      width: 100%;
-    }
-    input[type="submit"]:hover, button[type="submit"]:hover {
-      background: #1565c0;
-    }
-    .forgot-link, .resend-link {
-      color: var(--accent);
-      font-size: .98em;
-      text-decoration: underline;
-      cursor: pointer;
-      margin-top: -10px;
-      margin-bottom: 12px;
-      display: inline-block;
-    }
-    .success-msg {
-      color: var(--success);
-      margin: 8px 0 0 0;
-      font-weight: 600;
-      font-size: 1.05em;
-      text-align: center;
-    }
-    .error-msg {
-      color: var(--danger);
-      margin: 8px 0 0 0;
-      font-weight: 600;
-      font-size: 1.05em;
-      text-align: center;
-    }
-    .info-msg {
-      color: #fd0;
-      margin: 8px 0 0 0;
-      text-align: center;
+      border-radius: var(--radius) var(--radius) 0 0;
+      margin-top: 56px;
     }
     .footer-links {
       margin: 0 0 12px 0;
@@ -347,44 +368,14 @@
       color: #888;
       font-size: 1.1rem;
       opacity: .8;
+      text-decoration: none !important;
+      border-bottom: none !important;
     }
     .footer-links a:hover {
       color: #fff;
       opacity: 1;
-    }
-    footer {
-      background: #121212;
-      color: #888;
-      text-align: center;
-      padding: 32px 0 12px 0;
-      font-size: 1rem;
-      border-radius: 16px 16px 0 0;
-      margin-top: 0;
-      width: 100%;
-    }
-    @media (max-width: 900px) {
-      .sidebar { width: 60px; min-width: 60px; }
-      .sidebar-guest-label { font-size: 1rem; padding: 0 6px; }
-      .sidebar-nav a, .sidebar-nav .btn, .sidebar-nav button.sidebar-imei-btn { font-size: .96rem; padding: 10px 9px; }
-      .header-inner { padding: 0 8px; }
-      .main-content { margin-left: 60px; }
-      .login-card { max-width: 96vw; }
-    }
-    @media (max-width: 560px) {
-      .sidebar {
-        display: none;
-      }
-      .main-content {
-        margin-left: 0;
-      }
-      .login-card {
-        max-width: 96vw;
-        padding: 12px 2vw;
-        margin: 18px auto;
-      }
-      .tab-nav {
-        gap: 4px;
-      }
+      text-decoration: none !important;
+      border-bottom: none !important;
     }
   </style>
 </head>
@@ -398,6 +389,7 @@
       </div>
     </div>
   </header>
+
   <div id="mainLayout" style="display:flex; min-height:100vh;">
     <aside class="sidebar">
       <div class="sidebar-guest-label">
@@ -405,319 +397,142 @@
         <span>Guest</span>
       </div>
       <nav class="sidebar-nav">
-        <a href="landing-guest.html">Home</a>
-        <a href="landing-guest.html#features">Features</a>
+        <a href="landing-guest.html" class="active">Home</a>
+        <a href="#features">Features</a>
         <button class="sidebar-imei-btn" id="sidebarImeiBtn"><i class="ri-search-eye-line"></i> IMEI Check</button>
-        <a href="landing-guest.html#why">Why Us?</a>
-        <button class="btn" id="loginBtnSidebar" style="margin-top:18px;"><i class="ri-login-circle-line"></i>Login</button>
-        <button class="btn" id="registerBtnSidebar" style="background:var(--success);margin-top:8px;"><i class="ri-user-add-line"></i>Register</button>
+        <a href="#why">Why Us?</a>
+        <button class="btn" id="loginBtnNav" style="margin-top:18px;">Login</button>
+        <button class="btn" id="registerBtnNav" style="background:var(--success);margin-top:8px;">Register</button>
       </nav>
-      <div class="sidebar-footer" style="margin-top:auto;padding-bottom:32px;font-size:0.98em;color:var(--muted);text-align:center;width:90%;">
-        &copy; 2025 IMEICHECK2.COM
-      </div>
     </aside>
-    <div class="main-content">
-      <div class="login-card-wrapper">
-        <div class="login-card">
-          <div class="tab-nav">
-            <button id="tab-login" class="active" onclick="showTab('login', true)">Login</button>
-            <button id="tab-register" onclick="showTab('register', true)">Register</button>
-          </div>
-          <!-- Login Form -->
-          <form id="form-login">
-            <label for="login-email">Email</label>
-            <input type="email" id="login-email" required autocomplete="email" placeholder="your@email.com">
-            <label for="login-password">Password</label>
-            <input type="password" id="login-password" required placeholder="Password">
-            <button type="submit">Login</button>
-            <a class="forgot-link" onclick="showTab('forgot', true)">Forgot your password?</a>
-            <div id="login-msg"></div>
-          </form>
-          <!-- Register Form -->
-          <form id="form-register" style="display:none;">
-            <label for="register-username">Username</label>
-            <input type="text" id="register-username" required placeholder="Username">
-            <label for="register-email">Email</label>
-            <input type="email" id="register-email" required autocomplete="email" placeholder="your@email.com">
-            <label for="register-country">Country</label>
-            <select id="register-country" required>
-              <option value="">Loading countries...</option>
-            </select>
-            <label for="register-password">Password</label>
-            <input type="password" id="register-password" required placeholder="Password">
-            <label for="register-password2">Confirm Password</label>
-            <input type="password" id="register-password2" required placeholder="Repeat password">
-            <button type="submit">Register</button>
-            <div id="register-msg"></div>
-          </form>
-          <!-- Forgot Password Form -->
-          <form id="form-forgot" style="display:none;">
-            <label for="forgot-email">Email</label>
-            <input type="email" id="forgot-email" required placeholder="Registered email">
-            <button type="submit">Send Reset Link</button>
-            <div id="forgot-msg"></div>
-          </form>
-          <!-- Email Verification Form -->
-          <form id="form-verify" style="display:none;">
-            <label for="verify-email">Email</label>
-            <input type="email" id="verify-email" required placeholder="Your email">
-            <label for="verify-code">Verification Code</label>
-            <input type="text" id="verify-code" required maxlength="10" placeholder="Code received">
-            <button type="submit">Verify Email</button>
-            <a class="resend-link" onclick="resendVerificationCode()">Resend Code</a>
-            <div id="verify-msg"></div>
-          </form>
-          <!-- Reset Password Form -->
-          <form id="form-reset" style="display:none;">
-            <label for="reset-email">Email</label>
-            <input type="email" id="reset-email" required placeholder="Your email">
-            <label for="reset-code">Reset Code</label>
-            <input type="text" id="reset-code" required maxlength="10" placeholder="Code received">
-            <label for="reset-new">New Password</label>
-            <input type="password" id="reset-new" required placeholder="New password">
-            <button type="submit">Change Password</button>
-            <div id="reset-msg"></div>
-          </form>
+    <main class="main-content">
+      <section class="hero">
+        <h1>Fast & Secure <span style="color:var(--accent);">IMEI Lookup</span></h1>
+        <p>
+          Instantly discover the status of your mobile device.<br>
+          Check blacklist, activation, carrier and more, with full privacy.
+        </p>
+        <form class="search-box" id="mainImeiForm" autocomplete="off">
+          <label for="imeiInput"><i class="ri-fingerprint-2-line"></i> Enter your IMEI</label>
+          <span class="imei-hint-under-label">Find your IMEI by dialing <b>*#06#</b> on your device</span>
+          <input type="text" id="imeiInput" maxlength="15" minlength="15" pattern="\d{15}" placeholder="e.g. 356939052799999" required>
+          <button type="submit" id="consultBtn"><i class="ri-search-eye-line"></i> Check IMEI</button>
+        </form>
+      </section>
+
+      <section id="features" class="features">
+        <div class="feature">
+          <i class="ri-shield-keyhole-line"></i>
+          <h3>Total Privacy</h3>
+          <p>We do not store your results. Your lookups are 100% private and secure.</p>
         </div>
+        <div class="feature">
+          <i class="ri-time-line"></i>
+          <h3>Results in Seconds</h3>
+          <p>Receive your IMEI information instantly for most services.</p>
+        </div>
+        <div class="feature">
+          <i class="ri-global-line"></i>
+          <h3>Global Data Network</h3>
+          <p>International databases, covering nearly every country & carrier.</p>
+        </div>
+        <div class="feature">
+          <i class="ri-money-dollar-circle-line"></i>
+          <h3>Affordable Pricing</h3>
+          <p>Free lookup and premium options at low prices. No hidden fees!</p>
+        </div>
+      </section>
+
+      <div class="cta" style="text-align:center; margin:32px 0 0 0;">
+        <button class="btn" id="imeiCheckBtn" style="font-size:1.15rem;">
+          <i class="ri-search-eye-line"></i> IMEI Check
+        </button>
       </div>
-      <footer>
-        <div class="footer-links">
-          <a href="#">Terms of Service</a>
-          <a href="#">Privacy Policy</a>
-          <a href="#">Contact</a>
-        </div>
-        <div>
-          &copy; 2025 IMEICHECK2.COM. All rights reserved.
-        </div>
-      </footer>
-    </div>
+
+      <section class="why" id="why">
+        <h2>Why choose IMEICHECK2.COM?</h2>
+        <ul>
+          <li>Check if an IMEI is globally blacklisted.</li>
+          <li>Lookup activation dates, country, and carrier.</li>
+          <li>Fast access, no account required for guests.</li>
+          <li>Real tech support by experts.</li>
+        </ul>
+      </section>
+    </main>
   </div>
+
+  <footer>
+    <div class="footer-links">
+      <a href="#">Terms of Service</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Contact</a>
+    </div>
+    <div>
+      &copy; 2025 IMEICHECK2.COM. All rights reserved.
+    </div>
+  </footer>
+
   <script>
-    // API Base URL
-    const API_URL = window.BACKEND_URL;
-    // SPA Tabs (login/register/forgot/verify/reset)
-    function showTab(tab, push) {
-      ['login','register','forgot','verify','reset'].forEach(t=>{
-        document.getElementById('form-'+t).style.display = (t===tab) ? '' : 'none';
-        if(document.getElementById('tab-'+t))
-          document.getElementById('tab-'+t).classList.toggle('active', t===tab);
-      });
-      // Reset all messages
-      ['login','register','forgot','verify','reset'].forEach(t=>{
-        const el = document.getElementById(t+'-msg');
-        if(el) el.innerHTML='';
-      });
-      // Change URL without reloading
-      if(push) {
-        if(tab === 'login') history.pushState(null, '', '/login');
-        else if(tab === 'register') history.pushState(null, '', '/register');
-        else history.pushState(null, '', '/login#'+tab);
-      }
-    }
-    // Handle browser back/forward
-    window.onpopstate = function() {
-      let path = window.location.pathname.replace(/\/+$/, '');
-      let hash = window.location.hash.replace('#','');
-      if(path.endsWith('/register')) showTab('register');
-      else if(path.endsWith('/login') && hash) showTab(hash);
-      else showTab('login');
-    };
-    // Autofocus on tab show
-    document.querySelectorAll('.tab-nav button').forEach(btn=>{
-      btn.addEventListener('click',()=>setTimeout(()=>{
-        const visible = document.querySelector('form:not([style*="display: none"]) input[type="email"], form:not([style*="display: none"]) input[type="text"], form:not([style*="display: none"]) select');
-        if(visible) visible.focus();
-      },100));
-    });
-    // Fetch country list for register dropdown using fetch
-    document.addEventListener('DOMContentLoaded', function() {
-      const countrySelect = document.getElementById('register-country');
-      fetch(API_URL+'/api/countrylist')
-        .then(response => response.json())
-        .then(data => {
-          countrySelect.innerHTML = '<option value="">Select your country</option>';
-          data.forEach(country => {
-            const name = country.name || country.country || country;
-            const option = document.createElement('option');
-            option.value = name;
-            option.textContent = name;
-            countrySelect.appendChild(option);
-          });
-        })
-        .catch(err => {
-          countrySelect.innerHTML = '<option value="">Unable to load countries</option>';
-        });
-    });
-    // Login
-    document.getElementById('form-login').onsubmit = async function(e){
+    // Main IMEI form submit: redirige a imei-check-guest.html con IMEI populado
+    document.getElementById('mainImeiForm').onsubmit = function(e) {
       e.preventDefault();
-      const email = document.getElementById('login-email').value.trim();
-      const password = document.getElementById('login-password').value;
-      const msg = document.getElementById('login-msg');
-      msg.innerHTML = '';
-      try {
-        const res = await fetch(API_URL+'/api/users/login', {
-          method: 'POST',
-          headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({ email, password })
-        });
-        const data = await res.json();
-        if(res.ok && data.token){
-          msg.innerHTML = '<span class="success-msg">Login successful! Redirecting...</span>';
-          localStorage.setItem('token', data.token);
-          localStorage.setItem('user_type', data.user_type || 'registered');
-          window.location.href = (data.user_type==='admin'||data.user_type==='superadmin') ? 'admin.html' : 'landing-client.html';
-        } else {
-          msg.innerHTML = `<span class="error-msg">${data.error||'Login failed'}</span>`;
-        }
-      } catch(err){
-        msg.innerHTML = '<span class="error-msg">Server error</span>';
+      const input = document.getElementById('imeiInput');
+      if (!/^\d{15}$/.test(input.value)) {
+        input.style.border = "2px solid #e53935";
+        input.value = '';
+        input.placeholder = "Invalid IMEI";
+        input.focus();
+        return false;
       }
+      input.style.border = "2px solid #1e88e5";
+      window.location.href = `imei-check-guest.html?imei=${encodeURIComponent(input.value)}`;
+      return false;
     };
-    // Register
-    document.getElementById('form-register').onsubmit = async function(e){
-      e.preventDefault();
-      const username = document.getElementById('register-username').value.trim();
-      const email = document.getElementById('register-email').value.trim();
-      const country = document.getElementById('register-country').value.trim();
-      const password = document.getElementById('register-password').value;
-      const password2 = document.getElementById('register-password2').value;
-      const msg = document.getElementById('register-msg');
-      msg.innerHTML = '';
-      if(password !== password2) {
-        msg.innerHTML = '<span class="error-msg">Passwords do not match.</span>'; return;
-      }
-      if(!country) {
-        msg.innerHTML = '<span class="error-msg">Country is required.</span>'; return;
-      }
-      try {
-        const res = await fetch(API_URL+'/api/users/register', {
-          method: 'POST',
-          headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({ username, email, country, password })
-        });
-        const data = await res.json();
-        if(res.ok){
-          msg.innerHTML = '<span class="success-msg">Registered! Check your email for verification.</span>';
-          showTab('verify', true);
-          document.getElementById('verify-email').value = email;
-        } else {
-          msg.innerHTML = `<span class="error-msg">${data.error||'Registration failed'}</span>`;
-        }
-      } catch(err){
-        msg.innerHTML = '<span class="error-msg">Server error</span>';
-      }
+
+    // Login and Register nav buttons
+    document.getElementById('loginBtnNav').onclick = function() {
+      window.location.href = "/login";
     };
-    // Forgot Password
-    document.getElementById('form-forgot').onsubmit = async function(e){
-      e.preventDefault();
-      const email = document.getElementById('forgot-email').value.trim();
-      const msg = document.getElementById('forgot-msg');
-      msg.innerHTML = '';
-      try {
-        const res = await fetch(API_URL+'/api/users/forgot-password', {
-          method: 'POST',
-          headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({ email })
-        });
-        const data = await res.json();
-        if(res.ok){
-          msg.innerHTML = '<span class="success-msg">Reset code sent to your email.</span>';
-        } else {
-          msg.innerHTML = `<span class="error-msg">${data.error||'Error'}</span>`;
-        }
-      } catch(err){
-        msg.innerHTML = '<span class="error-msg">Server error</span>';
-      }
+    document.getElementById('registerBtnNav').onclick = function() {
+      window.location.href = "/register";
     };
-    // Email Verification
-    document.getElementById('form-verify').onsubmit = async function(e){
-      e.preventDefault();
-      const email = document.getElementById('verify-email').value.trim();
-      const code = document.getElementById('verify-code').value.trim();
-      const msg = document.getElementById('verify-msg');
-      msg.innerHTML = '';
-      try {
-        const res = await fetch(API_URL+'/api/users/verify-email', {
-          method: 'POST',
-          headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({ email, code })
-        });
-        const data = await res.json();
-        if(res.ok){
-          msg.innerHTML = '<span class="success-msg">Email verified!</span>';
-        } else {
-          msg.innerHTML = `<span class="error-msg">${data.error||'Invalid code'}</span>`;
-        }
-      } catch(err){
-        msg.innerHTML = '<span class="error-msg">Server error</span>';
-      }
+
+    // CTA IMEI Check button
+    document.getElementById('imeiCheckBtn').onclick = function() {
+      window.location.href = "imei-check-guest.html";
     };
-    // Resend Verification Code
-    function resendVerificationCode(){
-      const email = document.getElementById('verify-email').value.trim();
-      const msg = document.getElementById('verify-msg');
-      if(!email){ msg.innerHTML = '<span class="error-msg">Enter your email</span>'; return; }
-      fetch(API_URL+'/api/users/resend-verification', {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ email })
-      }).then(res=>res.json()).then(data=>{
-        if(data.success){
-          msg.innerHTML = '<span class="success-msg">Code resent!</span>';
-        }else{
-          msg.innerHTML = `<span class="error-msg">${data.error||'Error'}</span>`;
-        }
-      });
-    }
-    // Reset Password
-    document.getElementById('form-reset').onsubmit = async function(e){
-      e.preventDefault();
-      const email = document.getElementById('reset-email').value.trim();
-      const code = document.getElementById('reset-code').value.trim();
-      const newpass = document.getElementById('reset-new').value;
-      const msg = document.getElementById('reset-msg');
-      msg.innerHTML = '';
-      try {
-        const res = await fetch(API_URL+'/api/users/reset-password', {
-          method: 'POST',
-          headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({ email, code, password: newpass })
-        });
-        const data = await res.json();
-        if(res.ok){
-          msg.innerHTML = '<span class="success-msg">Password changed. You can log in now.</span>';
-        } else {
-          msg.innerHTML = `<span class="error-msg">${data.error||'Error'}</span>`;
-        }
-      } catch(err){
-        msg.innerHTML = '<span class="error-msg">Server error</span>';
-      }
-    };
-    // Optionally show tab from path/hash
-    (function(){
-      let path = window.location.pathname.replace(/\/+$/, '');
-      let hash = window.location.hash.replace('#','');
-      if(path.endsWith('/register')) showTab('register');
-      else if(path.endsWith('/login') && hash) showTab(hash);
-      else showTab('login');
-    })();
-    // Sidebar Register button
-    document.getElementById('registerBtnSidebar').onclick = function(e) {
-      e.preventDefault();
-      showTab('register', true);
-      window.scrollTo(0,0);
-    };
-    // Sidebar Login button
-    document.getElementById('loginBtnSidebar').onclick = function(e) {
-      e.preventDefault();
-      showTab('login', true);
-      window.scrollTo(0,0);
-    };
+
     // Sidebar IMEI Check button
     document.getElementById('sidebarImeiBtn').onclick = function() {
       window.location.href = "imei-check-guest.html";
     };
+
+    // --- AUTO REDIRECT TO ADMIN IF SUPERADMIN LOGGED IN ---
+    (async function() {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      try {
+        const res = await fetch(window.BACKEND_URL + '/api/users/me', {
+          headers: { Authorization: 'Bearer ' + token }
+        });
+        if (!res.ok) {
+          console.log('No ok response:', res.status);
+          return;
+        }
+        const user = await res.json();
+        // Prueba ambos formatos: root y anidado
+        if (
+          user && (
+            user.user_type === 'superadmin' ||
+            (user.user && user.user.user_type === 'superadmin')
+          )
+        ) {
+          window.location.href = 'admin.html';
+        }
+      } catch (e) {
+        console.log('Error en fetch /api/users/me', e);
+      }
+    })();
   </script>
 </body>
 </html>
