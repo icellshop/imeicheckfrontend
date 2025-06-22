@@ -6,6 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://fonts.googleapis.com/css?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+  <!-- Script global para BACKEND_URL -->
+  <script src="js/global-backend-url.js"></script>
   <style>
     body { background: #181a1b; color: #f4f4f4; font-family: 'Inter', Arial, sans-serif; min-height: 100vh; margin: 0; padding: 0;}
     header { background: #181a1b; height: 80px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 0; position: sticky; top: 0; z-index: 10;}
@@ -94,7 +96,7 @@
         return;
       }
       try {
-        const res = await fetch('/api/users/me', { headers: { Authorization: 'Bearer ' + token } });
+        const res = await fetch(window.BACKEND_URL + '/api/users/me', { headers: { Authorization: 'Bearer ' + token } });
         if (!res.ok) {
           window.location.href = 'landing-guest.html';
           return;
@@ -126,7 +128,7 @@
 
       let orders = [];
       try {
-        const res = await fetch('/api/imei-orders/admin-list', { headers: { Authorization: 'Bearer ' + token } });
+        const res = await fetch(window.BACKEND_URL + '/api/imei-orders/admin-list', { headers: { Authorization: 'Bearer ' + token } });
         if (!res.ok) throw new Error('Failed to fetch orders');
         orders = await res.json();
       } catch (e) {

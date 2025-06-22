@@ -8,6 +8,8 @@
   <link href="https://fonts.googleapis.com/css?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <!-- Remixicon Icons -->
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+  <!-- BACKEND URL GLOBAL -->
+  <script src="js/global-backend-url.js"></script>
   <style>
     :root {
       --primary: #181a1b;
@@ -491,8 +493,8 @@
     </div>
   </div>
   <script>
-    // API Base URL (use tu URL Codespace)
-    const API_URL = "https://laughing-space-journey-v656p7q5pgwr3jxv-8080.app.github.dev";
+    // API Base URL
+    const API_URL = window.BACKEND_URL;
     // SPA Tabs (login/register/forgot/verify/reset)
     function showTab(tab, push) {
       ['login','register','forgot','verify','reset'].forEach(t=>{

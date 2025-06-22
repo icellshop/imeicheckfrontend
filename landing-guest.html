@@ -8,6 +8,8 @@
   <link href="https://fonts.googleapis.com/css?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <!-- Remixicon Icons -->
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+  <!-- BACKEND URL GLOBAL -->
+  <script src="js/global-backend-url.js"></script>
   <style>
     :root {
       --primary: #181a1b;
@@ -506,32 +508,31 @@
     };
 
     // --- AUTO REDIRECT TO ADMIN IF SUPERADMIN LOGGED IN ---
- (async function() {
-  const token = localStorage.getItem('token');
-  if (!token) return;
-  try {
-    const res = await fetch('/api/users/me', {
-      headers: { Authorization: 'Bearer ' + token }
-    });
-    if (!res.ok) {
-      console.log('No ok response:', res.status);
-      return;
-    }
-    const user = await res.json();
-    console.log('API /api/users/me responde:', user);
-    // Prueba ambos formatos: root y anidado
-    if (
-      user && (
-        user.user_type === 'superadmin' ||
-        (user.user && user.user.user_type === 'superadmin')
-      )
-    ) {
-      window.location.href = 'admin.html';
-    }
-  } catch (e) {
-    console.log('Error en fetch /api/users/me', e);
-  }
-})();
+    (async function() {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      try {
+        const res = await fetch(window.BACKEND_URL + '/api/users/me', {
+          headers: { Authorization: 'Bearer ' + token }
+        });
+        if (!res.ok) {
+          console.log('No ok response:', res.status);
+          return;
+        }
+        const user = await res.json();
+        // Prueba ambos formatos: root y anidado
+        if (
+          user && (
+            user.user_type === 'superadmin' ||
+            (user.user && user.user.user_type === 'superadmin')
+          )
+        ) {
+          window.location.href = 'admin.html';
+        }
+      } catch (e) {
+        console.log('Error en fetch /api/users/me', e);
+      }
+    })();
   </script>
 </body>
 </html>

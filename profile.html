@@ -8,6 +8,8 @@
   <link href="https://fonts.googleapis.com/css?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <!-- Remixicon Icons -->
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+  <!-- BACKEND URL GLOBAL -->
+  <script src="js/global-backend-url.js"></script>
   <style>
     :root {
       --primary: #181a1b;
@@ -430,7 +432,7 @@
         const token = localStorage.getItem('token');
         if (!token) return;
 
-        const res = await fetch('/api/users/me', {
+        const res = await fetch(window.BACKEND_URL + '/api/users/me', {
           headers: {
             Authorization: 'Bearer ' + token
           }
@@ -487,7 +489,7 @@
         return;
       }
       try {
-        const res = await fetch('/api/users/change-password', {
+        const res = await fetch(window.BACKEND_URL + '/api/users/change-password', {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

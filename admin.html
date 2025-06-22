@@ -10,6 +10,8 @@
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- BACKEND URL GLOBAL -->
+  <script src="js/global-backend-url.js"></script>
   <style>
     :root {
       --primary: #181a1b;
@@ -454,7 +456,7 @@
         return;
       }
       try {
-        const res = await fetch('/api/users/me', { headers: { Authorization: 'Bearer ' + token } });
+        const res = await fetch(window.BACKEND_URL + '/api/users/me', { headers: { Authorization: 'Bearer ' + token } });
         if (!res.ok) {
           window.location.href = 'landing-guest.html';
           return;
@@ -479,7 +481,7 @@
     };
 
     // ---- API URL BASE ----
-    const API_BASE = "https://laughing-space-journey-v656p7q5pgwr3jxv-8080.app.github.dev/api/dashboard";
+    const API_BASE = window.BACKEND_URL + "/api/dashboard";
 
     // Currency formatting
     function formatCurrency(amount) {

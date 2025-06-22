@@ -6,6 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://fonts.googleapis.com/css?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+  <!-- Script global para BACKEND_URL -->
+  <script src="js/global-backend-url.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <style>
     body { background: #181a1b; color: #f4f4f4; font-family: 'Inter', Arial, sans-serif; min-height: 100vh; margin: 0; padding: 0;}
@@ -111,7 +113,7 @@
         return;
       }
       try {
-        const res = await fetch('/api/users/me', { headers: { Authorization: 'Bearer ' + token } });
+        const res = await fetch(window.BACKEND_URL + '/api/users/me', { headers: { Authorization: 'Bearer ' + token } });
         if (!res.ok) {
           window.location.href = 'landing-guest.html';
           return;
@@ -162,7 +164,7 @@
 
       let services = [];
       try {
-        const res = await fetch('/api/services', { headers: { Authorization: 'Bearer ' + token } });
+        const res = await fetch(window.BACKEND_URL + '/api/services', { headers: { Authorization: 'Bearer ' + token } });
         if (!res.ok) throw new Error('Failed to fetch services');
         services = await res.json();
       } catch (e) {
@@ -229,7 +231,7 @@
           btn.disabled = true;
           statusSpan.textContent = '...';
           try {
-            const response = await fetch(`/api/services/${serviceId}`, {
+            const response = await fetch(window.BACKEND_URL + `/api/services/${serviceId}`, {
               method: 'PUT',
               headers: {
                 'Content-Type': 'application/json',
@@ -340,7 +342,7 @@
           let ok = 0, fail = 0;
           for (const up of updates) {
             try {
-              const resp = await fetch(`/api/services/${up.service_id}`, {
+              const resp = await fetch(window.BACKEND_URL + `/api/services/${up.service_id}`, {
                 method: 'PUT',
                 headers: {
                   'Content-Type': 'application/json',

@@ -6,6 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://fonts.googleapis.com/css?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+  <!-- Script global para BACKEND_URL -->
+  <script src="js/global-backend-url.js"></script>
   <style>
     :root {
       --primary: #181a1b;
@@ -468,7 +470,7 @@
       try {
         const token = localStorage.getItem('token');
         if (!token) return;
-        const res = await fetch('/api/users/me', {
+        const res = await fetch(window.BACKEND_URL + '/api/users/me', {
           headers: { Authorization: 'Bearer ' + token }
         });
         if (!res.ok) return;
@@ -491,9 +493,7 @@
       window.location.href = "clientarea.html#profile";
     };
   </script>
-  <!-- Tu script JS original va aquí (no lo modifico por instrucción) -->
   <script>
-    // (Pega aquí exactamente tu script funcional de lógica de pagos, polling, etc)
     document.addEventListener('DOMContentLoaded', async function() {
       // Mostrar mensaje de pago exitoso o fallido si viene en la URL
       const params = new URLSearchParams(window.location.search);
@@ -505,19 +505,18 @@
       statusMsgDiv.className = '';
       if (paymentStatus === 'success' && stripeSessionId) {
         try {
-     const res = await fetch(`/api/payments/by-session/${encodeURIComponent(stripeSessionId)}`);
-if (res.ok) {
-  const data = await res.json();
-  // Usa credited_amount si existe, sino fallback a amount
-  const credited = data.credited_amount != null ? parseFloat(data.credited_amount) : parseFloat(data.amount);
-  if (!isNaN(credited)) {
-    statusMsgDiv.textContent = `Payment successful, $${credited.toFixed(2)} have been added to your balance.`;
-  } else {
-    statusMsgDiv.textContent = `Payment successful! Funds have been added to your balance.`;
-  }
-  statusMsgDiv.className = 'success';
-  statusMsgDiv.style.display = 'block';
-} else {
+          const res = await fetch(window.BACKEND_URL + `/api/payments/by-session/${encodeURIComponent(stripeSessionId)}`);
+          if (res.ok) {
+            const data = await res.json();
+            const credited = data.credited_amount != null ? parseFloat(data.credited_amount) : parseFloat(data.amount);
+            if (!isNaN(credited)) {
+              statusMsgDiv.textContent = `Payment successful, $${credited.toFixed(2)} have been added to your balance.`;
+            } else {
+              statusMsgDiv.textContent = `Payment successful! Funds have been added to your balance.`;
+            }
+            statusMsgDiv.className = 'success';
+            statusMsgDiv.style.display = 'block';
+          } else {
             statusMsgDiv.textContent = `Payment successful! Funds have been added to your balance.`;
             statusMsgDiv.className = 'success';
             statusMsgDiv.style.display = 'block';
@@ -582,7 +581,7 @@ if (res.ok) {
           window.location.href = "login.html";
           return;
         }
-        const res = await fetch('/api/payments/stripe-checkout', {
+        const res = await fetch(window.BACKEND_URL + '/api/payments/stripe-checkout', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -604,7 +603,7 @@ if (res.ok) {
         const amount = parseFloat(document.getElementById('funds-amount').value);
         if (!amount || amount < 1) return alert('Enter a valid amount.');
         const finalAmount = calculateFinalAmount();
-        const res = await fetch('/api/payments/paypal-checkout', {
+        const res = await fetch(window.BACKEND_URL + '/api/payments/paypal-checkout', {
           method: 'POST',
           headers: {'Content-Type':'application/json'},
           body: JSON.stringify({

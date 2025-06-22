@@ -8,6 +8,8 @@
   <link href="https://fonts.googleapis.com/css?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <!-- Remixicon Icons -->
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+  <!-- BACKEND URL GLOBAL -->
+  <script src="js/global-backend-url.js"></script>
   <style>
     body {
       background: #181a1b;
@@ -298,7 +300,7 @@
         return;
       }
       try {
-        const res = await fetch('/api/users/me', { headers: { Authorization: 'Bearer ' + token } });
+        const res = await fetch(window.BACKEND_URL + '/api/users/me', { headers: { Authorization: 'Bearer ' + token } });
         if (!res.ok) {
           window.location.href = 'landing-guest.html';
           return;
@@ -334,7 +336,7 @@
       // Fetch users with stats from backend
       let users = [];
       try {
-        const res = await fetch('/api/users/admin-list', { headers: { Authorization: 'Bearer ' + token } });
+        const res = await fetch(window.BACKEND_URL + '/api/users/admin-list', { headers: { Authorization: 'Bearer ' + token } });
         if (!res.ok) throw new Error('Failed to fetch users');
         users = await res.json();
       } catch (e) {
@@ -382,7 +384,7 @@
           btn.disabled = true;
           statusSpan.textContent = '...';
           try {
-            const response = await fetch(`/api/users/${userId}/update-type`, {
+            const response = await fetch(window.BACKEND_URL + `/api/users/${userId}/update-type`, {
               method: 'PUT',
               headers: {
                 'Content-Type': 'application/json',
