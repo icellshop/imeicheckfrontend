@@ -1,5 +1,5 @@
 // Variable global para el backend
-window.BACKEND_URL = 'https://imeicheck-41j1.onrender.com/api/users';
+window.BACKEND_URL = 'https://imeicheck-41j1.onrender.com';
 
 // Ejemplo de uso:
 fetch(window.BACKEND_URL + '/api/users/me', {
