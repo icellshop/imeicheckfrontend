@@ -87,6 +87,8 @@
       font-size: 2.2rem;
       margin-right: 4px;
     }
+
+    /* ---- Sidebar styles ---- */
     .sidebar {
       width: 230px;
       min-width: 180px;
@@ -101,6 +103,7 @@
       box-shadow: 2px 0 12px 0 rgba(0,0,0,0.18);
       z-index: 100;
       padding-top: 90px;
+      transition: transform 0.2s cubic-bezier(.4,0,.2,1);
     }
     .sidebar-username {
       margin: 0 0 16px 0;
@@ -185,6 +188,27 @@
       background: var(--btn-hover);
       color: #fff;
     }
+
+    /* --- Responsive Sidebar Hamburguesa (móvil) --- */
+    .sidebar-toggle-btn {
+      display: none;
+      position: absolute;
+      left: 16px;
+      top: 18px;
+      background: none;
+      border: none;
+      color: var(--accent);
+      font-size: 2.3em;
+      z-index: 200;
+      cursor: pointer;
+    }
+    .sidebar-backdrop {
+      display: none;
+      background: rgba(0,0,0,0.32);
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: 99;
+    }
     @media (max-width: 900px) {
       .sidebar { width: 60px; min-width: 60px; }
       .sidebar-username { font-size: 1rem; padding: 0 6px; }
@@ -192,11 +216,25 @@
       .header-inner { padding: 0 8px; }
     }
     @media (max-width: 650px) {
-      .sidebar { display: none; }
-      .header-inner { flex-direction: column; gap: 6px; height: auto; }
-      .header-title-center { position: static; }
-      .main-content { margin-left: 0 !important; }
+      .sidebar {
+        transform: translateX(-100%);
+        width: 85vw;
+        max-width: 310px;
+        display: flex;
+      }
+      .sidebar.open {
+        transform: translateX(0);
+        display: flex;
+      }
+      .sidebar-toggle-btn {
+        display: block;
+      }
+      .sidebar-backdrop.open {
+        display: block;
+      }
+      .main-content { margin-left: 0 !important; width: 100vw;}
     }
+
     .main-content {
       margin-left: 230px;
       min-height: 100vh;
@@ -367,19 +405,6 @@
       color: #fff;
       opacity: 1;
     }
-    @media (max-width: 900px) {
-      .sidebar { width: 60px; min-width: 60px; }
-      .sidebar-username { font-size: 1rem; padding: 0 6px; }
-      .sidebar-nav a, .sidebar-nav .btn { font-size: .96rem; padding: 10px 9px; }
-      .header-inner { padding: 0 8px; }
-      .main-content { margin-left: 60px; width: calc(100vw - 60px);}
-    }
-    @media (max-width: 650px) {
-      .sidebar { display: none; }
-      .header-inner { flex-direction: column; gap: 6px; height: auto; }
-      .header-title-center { position: static; }
-      .main-content { margin-left: 0 !important; width: 100vw;}
-    }
     @media (max-width: 600px) {
       #add-funds-section {
         padding: 18px 8px 18px 8px;
@@ -391,6 +416,8 @@
 <body>
   <header>
     <div class="header-inner">
+      <!-- Botón hamburguesa para móvil -->
+      <button class="sidebar-toggle-btn" id="sidebarToggleBtn" aria-label="Open menu"><i class="ri-menu-line"></i></button>
       <div class="header-title-center">
         <a class="logo-title" href="landing-client.html">
           <i class="ri-shield-check-fill"></i> IMEICHECK2.COM
@@ -399,7 +426,7 @@
     </div>
   </header>
   <div id="mainLayout" style="display:flex; min-height:100vh;">
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebarNav">
       <div class="sidebar-username" id="sidebarUsername">
         <i class="ri-user-3-fill"></i>
         <span id="sidebarUsernameText">Username</span>
@@ -417,6 +444,7 @@
         <button class="btn" id="profileBtnNav" style="margin-top:18px;">Profile</button>
       </nav>
     </aside>
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
     <main class="main-content">
       <div id="add-funds-section">
         <h2><i class="ri-bank-card-line"></i> Add Funds</h2>
@@ -492,6 +520,34 @@
     document.getElementById('profileBtnNav').onclick = function() {
       window.location.href = "clientarea.html#profile";
     };
+
+    // Sidebar responsive toggle
+    (function() {
+      const sidebar = document.getElementById('sidebarNav');
+      const toggleBtn = document.getElementById('sidebarToggleBtn');
+      const backdrop = document.getElementById('sidebarBackdrop');
+      function openSidebar() {
+        sidebar.classList.add('open');
+        backdrop.classList.add('open');
+      }
+      function closeSidebar() {
+        sidebar.classList.remove('open');
+        backdrop.classList.remove('open');
+      }
+      toggleBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        openSidebar();
+      });
+      backdrop.addEventListener('click', closeSidebar);
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeSidebar();
+      });
+      sidebar.addEventListener('click', function(e) {
+        if (e.target.tagName === 'A' || e.target.classList.contains('btn')) {
+          closeSidebar();
+        }
+      });
+    })();
   </script>
   <script>
     document.addEventListener('DOMContentLoaded', async function() {
