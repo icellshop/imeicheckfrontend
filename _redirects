@@ -1,6 +1,6 @@
 /register      /login#register  200
 /login         /login.html       200
-/ /landing-guest.html 200
+/ /index.html 200
 /imei-check-guest /imei-check-guest.html 200
 /imei-check /imei-check.html 200
 /dashboard /dashboard.html 200
