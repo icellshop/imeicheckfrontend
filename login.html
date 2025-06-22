@@ -65,10 +65,9 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      position: absolute;
-      left: 0; right: 0; top: 0; bottom: 0;
       pointer-events: none;
       z-index: 1;
+      position: static;
     }
     .logo-title {
       font-weight: 700;
@@ -81,6 +80,7 @@
       text-align: center;
       pointer-events: auto;
       text-decoration: none;
+      z-index: 2;
     }
     .logo-title i {
       color: var(--accent);
@@ -101,6 +101,7 @@
       box-shadow: 2px 0 12px 0 rgba(0,0,0,0.18);
       z-index: 100;
       padding-top: 90px;
+      transition: transform 0.2s cubic-bezier(.4,0,.2,1);
     }
     .sidebar-guest-label {
       margin: 0 0 16px 0;
@@ -185,6 +186,59 @@
       margin-right: 6px;
       margin-left: 0;
     }
+    /* --- Responsive Sidebar Hamburguesa (móvil) --- */
+    .sidebar-toggle-btn {
+      display: none;
+      position: absolute;
+      left: 16px;
+      top: 18px;
+      background: none;
+      border: none;
+      color: var(--accent);
+      font-size: 2.3em;
+      z-index: 200;
+      cursor: pointer;
+    }
+    .sidebar-backdrop {
+      display: none;
+      background: rgba(0,0,0,0.32);
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: 99;
+    }
+    @media (max-width: 900px) {
+      .sidebar { width: 60px; min-width: 60px; }
+      .sidebar-guest-label { font-size: 1rem; padding: 0 6px; }
+      .sidebar-nav a, .sidebar-nav .btn, .sidebar-nav button.sidebar-imei-btn { font-size: .96rem; padding: 10px 9px; }
+      .header-inner { padding: 0 8px; }
+      .main-content { margin-left: 60px; }
+      .login-card { max-width: 96vw; }
+    }
+    @media (max-width: 650px) {
+      .header-inner {
+        justify-content: flex-start;
+        padding-right: 0;
+        padding-left: 0;
+      }
+      .sidebar { transform: translateX(-100%); width: 85vw; max-width: 310px; display: flex; }
+      .sidebar.open { transform: translateX(0); display: flex; }
+      .sidebar-toggle-btn { display: block; margin-left: 8px; z-index: 3; background: none; border: none; }
+      .sidebar-backdrop.open { display: block; }
+      .main-content { margin-left: 0 !important; }
+      .header-title-center {
+        flex: 1;
+        justify-content: center;
+        align-items: center;
+        position: static;
+        pointer-events: none;
+      }
+      .logo-title {
+        font-size: 1.3rem;
+        pointer-events: auto;
+      }
+      .login-card { max-width: 96vw; padding: 12px 2vw; margin: 18px auto;}
+      .tab-nav { gap: 4px; }
+    }
     .main-content {
       min-height: 100vh;
       display: flex;
@@ -196,20 +250,6 @@
       .main-content {
         margin-left: var(--sidebar-width);
       }
-    }
-    @media (max-width: 900px) {
-      .sidebar { width: 60px; min-width: 60px; }
-      .sidebar-guest-label { font-size: 1rem; padding: 0 6px; }
-      .sidebar-nav a, .sidebar-nav .btn, .sidebar-nav button.sidebar-imei-btn { font-size: .96rem; padding: 10px 9px; }
-      .header-inner { padding: 0 8px; }
-      .main-content { margin-left: 60px; }
-      .login-card { max-width: 96vw; }
-    }
-    @media (max-width: 650px) {
-      .sidebar { display: none; }
-      .header-inner { flex-direction: column; gap: 6px; height: auto; }
-      .header-title-center { position: static; }
-      .main-content { margin-left: 0 !important; }
     }
     .login-card-wrapper {
       flex: 1;
@@ -362,35 +402,12 @@
       margin-top: 0;
       width: 100%;
     }
-    @media (max-width: 900px) {
-      .sidebar { width: 60px; min-width: 60px; }
-      .sidebar-guest-label { font-size: 1rem; padding: 0 6px; }
-      .sidebar-nav a, .sidebar-nav .btn, .sidebar-nav button.sidebar-imei-btn { font-size: .96rem; padding: 10px 9px; }
-      .header-inner { padding: 0 8px; }
-      .main-content { margin-left: 60px; }
-      .login-card { max-width: 96vw; }
-    }
-    @media (max-width: 560px) {
-      .sidebar {
-        display: none;
-      }
-      .main-content {
-        margin-left: 0;
-      }
-      .login-card {
-        max-width: 96vw;
-        padding: 12px 2vw;
-        margin: 18px auto;
-      }
-      .tab-nav {
-        gap: 4px;
-      }
-    }
   </style>
 </head>
 <body>
   <header>
     <div class="header-inner">
+      <button class="sidebar-toggle-btn" id="sidebarToggleBtn" aria-label="Open menu"><i class="ri-menu-line"></i></button>
       <div class="header-title-center">
         <a class="logo-title" href="index.html">
           <i class="ri-shield-check-fill"></i> IMEICHECK2.COM
@@ -399,7 +416,7 @@
     </div>
   </header>
   <div id="mainLayout" style="display:flex; min-height:100vh;">
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebarNav">
       <div class="sidebar-guest-label">
         <i class="ri-user-3-fill"></i>
         <span>Guest</span>
@@ -416,6 +433,7 @@
         &copy; 2025 IMEICHECK2.COM
       </div>
     </aside>
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
     <div class="main-content">
       <div class="login-card-wrapper">
         <div class="login-card">
@@ -493,6 +511,34 @@
     </div>
   </div>
   <script>
+    // Sidebar responsive toggle
+    (function() {
+      const sidebar = document.getElementById('sidebarNav');
+      const toggleBtn = document.getElementById('sidebarToggleBtn');
+      const backdrop = document.getElementById('sidebarBackdrop');
+      function openSidebar() {
+        sidebar.classList.add('open');
+        backdrop.classList.add('open');
+      }
+      function closeSidebar() {
+        sidebar.classList.remove('open');
+        backdrop.classList.remove('open');
+      }
+      toggleBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        openSidebar();
+      });
+      backdrop.addEventListener('click', closeSidebar);
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeSidebar();
+      });
+      sidebar.addEventListener('click', function(e) {
+        if (e.target.tagName === 'A' || e.target.classList.contains('btn') || e.target.classList.contains('sidebar-imei-btn')) {
+          closeSidebar();
+        }
+      });
+    })();
+
     // API Base URL
     const API_URL = window.BACKEND_URL;
     // SPA Tabs (login/register/forgot/verify/reset)
