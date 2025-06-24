@@ -13,10 +13,10 @@
     body { background: #181a1b; color: #f4f4f4; font-family: 'Inter', Arial, sans-serif; min-height: 100vh; margin: 0; padding: 0;}
     header { background: #181a1b; height: 80px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 0; position: sticky; top: 0; z-index: 10;}
     .header-inner { width: 100vw; display: flex; align-items: center; justify-content: center; position: relative; height: 80px;}
-    .header-title-center { flex: 1; display: flex; justify-content: center; align-items: center; position: absolute; left: 0; right: 0; top: 0; bottom: 0; pointer-events: none; z-index: 1;}
-    .logo-title { font-weight: 700; font-size: 2rem; letter-spacing: 1px; color: #fff; display: flex; align-items: center; gap: 8px; text-align: center; pointer-events: auto; text-decoration: none;}
+    .header-title-center { flex: 1; display: flex; justify-content: center; align-items: center; pointer-events: none; z-index: 1; position: static;}
+    .logo-title { font-weight: 700; font-size: 2rem; letter-spacing: 1px; color: #fff; display: flex; align-items: center; gap: 8px; text-align: center; pointer-events: auto; text-decoration: none; z-index: 2;}
     .logo-title i { color: #7c3aed; font-size: 2.2rem; margin-right: 4px;}
-    .sidebar { width: 230px; min-width: 180px; background: #212325; height: 100vh; position: fixed; left: 0; top: 0; display: flex; flex-direction: column; align-items: stretch; box-shadow: 2px 0 12px 0 rgba(0,0,0,0.18); z-index: 100; padding-top: 90px;}
+    .sidebar { width: 230px; min-width: 180px; background: #212325; height: 100vh; position: fixed; left: 0; top: 0; display: flex; flex-direction: column; align-items: stretch; box-shadow: 2px 0 12px 0 rgba(0,0,0,0.18); z-index: 100; padding-top: 90px; transition: transform 0.2s cubic-bezier(.4,0,.2,1);}
     .sidebar-username { margin: 0 0 16px 0; padding: 0 24px; font-size: 1.13rem; font-weight: 700; color: #fff; text-align: left; display: flex; align-items: center; gap: 9px; letter-spacing: 0.5px;}
     .sidebar-username i { color: #7c3aed; font-size: 1.25em;}
     .sidebar-nav { display: flex; flex-direction: column; gap: 8px; padding: 0 16px;}
@@ -25,8 +25,50 @@
     .sidebar-nav .btn { margin-top: 18px; width: 100%; justify-content: center; font-size: 1.08rem; background: #e53935; color: #fff; border: none; border-radius: 20px; padding: 14px 0; font-weight: 700; box-shadow: 0 4px 32px 0 rgba(0,0,0,0.6); cursor: pointer; transition: background .2s; display: inline-block;}
     .sidebar-nav .btn:hover { background: #b71c1c; color: #fff;}
     .main-content { margin-left: 230px; padding: 36px 24px; min-height: 100vh; background: #181a1b;}
+    /* --- Responsive Sidebar Hamburguesa (móvil) --- */
+    .sidebar-toggle-btn {
+      display: none;
+      position: absolute;
+      left: 16px;
+      top: 18px;
+      background: none;
+      border: none;
+      color: #7c3aed;
+      font-size: 2.3em;
+      z-index: 200;
+      cursor: pointer;
+    }
+    .sidebar-backdrop {
+      display: none;
+      background: rgba(0,0,0,0.32);
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: 99;
+    }
     @media (max-width: 900px) {.sidebar { width: 60px; min-width: 60px; }.sidebar-username { font-size: 1rem; padding: 0 6px; }.sidebar-nav a, .sidebar-nav .btn { font-size: .96rem; padding: 10px 9px; }.header-inner { padding: 0 8px; }.main-content { margin-left: 60px; }}
-    @media (max-width: 650px) {.sidebar { display: none; }.main-content { margin-left: 0; }.header-inner { flex-direction: column; gap: 6px; height: auto; }.header-title-center { position: static; } }
+    @media (max-width: 650px) {
+      .header-inner {
+        justify-content: flex-start;
+        padding-right: 0;
+        padding-left: 0;
+      }
+      .sidebar { transform: translateX(-100%); width: 85vw; max-width: 310px; display: flex; }
+      .sidebar.open { transform: translateX(0); display: flex; }
+      .sidebar-toggle-btn { display: block; margin-left: 8px; z-index: 3; background: none; border: none; }
+      .sidebar-backdrop.open { display: block; }
+      .main-content { margin-left: 0; }
+      .header-title-center {
+        flex: 1;
+        justify-content: center;
+        align-items: center;
+        position: static;
+        pointer-events: none;
+      }
+      .logo-title {
+        font-size: 1.3rem;
+        pointer-events: auto;
+      }
+    }
     .admin-services-header { font-size: 2rem; font-weight: 800; margin-bottom: 28px; text-align: left; color: #7c3aed;}
     .toolbar { display: flex; gap: 16px; margin-bottom: 14px; align-items: center; }
     .toolbar button, .toolbar label { font-size: 1rem; background: #232437; color: #f4f4f4; border: 1px solid #333; border-radius: 8px; padding: 7px 16px; cursor: pointer; transition: background .2s;}
@@ -52,6 +94,7 @@
 <body>
   <header>
     <div class="header-inner">
+      <button class="sidebar-toggle-btn" id="sidebarToggleBtn" aria-label="Open menu"><i class="ri-menu-line"></i></button>
       <div class="header-title-center">
         <a class="logo-title" href="admin.html">
           <i class="ri-shield-check-fill"></i> IMEICHECK2.COM
@@ -60,7 +103,7 @@
     </div>
   </header>
   <div id="mainLayout" style="display:flex; min-height:100vh;">
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebarNav">
       <div class="sidebar-username" id="sidebarUsername">
         <i class="ri-user-3-fill"></i>
         <span id="sidebarUsernameText">Superadmin</span>
@@ -74,6 +117,7 @@
         <button class="btn" id="logoutBtn">Logout</button>
       </nav>
     </aside>
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
     <main class="main-content">
       <div class="admin-services-header">Service Management</div>
       <div class="toolbar">
@@ -135,6 +179,34 @@
       localStorage.removeItem('token');
       window.location.href = 'index.html';
     };
+
+    // Sidebar responsive toggle
+    (function() {
+      const sidebar = document.getElementById('sidebarNav');
+      const toggleBtn = document.getElementById('sidebarToggleBtn');
+      const backdrop = document.getElementById('sidebarBackdrop');
+      function openSidebar() {
+        sidebar.classList.add('open');
+        backdrop.classList.add('open');
+      }
+      function closeSidebar() {
+        sidebar.classList.remove('open');
+        backdrop.classList.remove('open');
+      }
+      toggleBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        openSidebar();
+      });
+      backdrop.addEventListener('click', closeSidebar);
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeSidebar();
+      });
+      sidebar.addEventListener('click', function(e) {
+        if (e.target.tagName === 'A' || e.target.classList.contains('btn')) {
+          closeSidebar();
+        }
+      });
+    })();
 
     // ---- Sorting helpers ----
     let currentSort = { key: 'service_id', dir: 'asc' };

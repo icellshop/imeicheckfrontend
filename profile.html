@@ -67,10 +67,9 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      position: absolute;
-      left: 0; right: 0; top: 0; bottom: 0;
       pointer-events: none;
       z-index: 1;
+      position: static;
     }
     .logo-title {
       font-weight: 700;
@@ -83,6 +82,7 @@
       text-align: center;
       pointer-events: auto;
       text-decoration: none;
+      z-index: 2;
     }
     .logo-title i {
       color: var(--accent);
@@ -103,6 +103,7 @@
       box-shadow: 2px 0 12px 0 rgba(0,0,0,0.18);
       z-index: 100;
       padding-top: 90px;
+      transition: transform 0.2s cubic-bezier(.4,0,.2,1);
     }
     .sidebar-username {
       margin: 0 0 16px 0;
@@ -187,6 +188,26 @@
       background: var(--btn-hover);
       color: #fff;
     }
+    /* --- Responsive Sidebar Hamburguesa (móvil) --- */
+    .sidebar-toggle-btn {
+      display: none;
+      position: absolute;
+      left: 16px;
+      top: 18px;
+      background: none;
+      border: none;
+      color: var(--accent);
+      font-size: 2.3em;
+      z-index: 200;
+      cursor: pointer;
+    }
+    .sidebar-backdrop {
+      display: none;
+      background: rgba(0,0,0,0.32);
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: 99;
+    }
     @media (max-width: 900px) {
       .sidebar { width: 60px; min-width: 60px; }
       .sidebar-username { font-size: 1rem; padding: 0 6px; }
@@ -194,10 +215,27 @@
       .header-inner { padding: 0 8px; }
     }
     @media (max-width: 650px) {
-      .sidebar { display: none; }
-      .header-inner { flex-direction: column; gap: 6px; height: auto; }
-      .header-title-center { position: static; }
-      .main-content { margin-left: 0 !important; }
+      .header-inner {
+        justify-content: flex-start;
+        padding-right: 0;
+        padding-left: 0;
+      }
+      .sidebar { transform: translateX(-100%); width: 85vw; max-width: 310px; display: flex; }
+      .sidebar.open { transform: translateX(0); display: flex; }
+      .sidebar-toggle-btn { display: block; margin-left: 8px; z-index: 3; background: none; border: none; }
+      .sidebar-backdrop.open { display: block; }
+      .main-content { margin-left: 0 !important; width: 100vw;}
+      .header-title-center {
+        flex: 1;
+        justify-content: center;
+        align-items: center;
+        position: static;
+        pointer-events: none;
+      }
+      .logo-title {
+        font-size: 1.3rem;
+        pointer-events: auto;
+      }
     }
     .main-content {
       margin-left: 230px;
@@ -360,6 +398,7 @@
 <body>
   <header>
     <div class="header-inner">
+      <button class="sidebar-toggle-btn" id="sidebarToggleBtn" aria-label="Open menu"><i class="ri-menu-line"></i></button>
       <div class="header-title-center">
         <a class="logo-title" href="landing-client.html">
           <i class="ri-shield-check-fill"></i> IMEICHECK2.COM
@@ -369,7 +408,7 @@
   </header>
 
   <div id="mainLayout" style="display:flex; min-height:100vh;">
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebarNav">
       <div class="sidebar-username" id="sidebarUsername">
         <i class="ri-user-3-fill"></i>
         <span id="sidebarUsernameText">Username</span>
@@ -387,6 +426,7 @@
         <a href="profile.html" class="active">Profile</a>
       </nav>
     </aside>
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
     <main class="main-content">
       <div class="profile-area">
         <h2>Your Profile</h2>
@@ -426,6 +466,34 @@
   </footer>
 
   <script>
+    // Sidebar responsive toggle
+    (function() {
+      const sidebar = document.getElementById('sidebarNav');
+      const toggleBtn = document.getElementById('sidebarToggleBtn');
+      const backdrop = document.getElementById('sidebarBackdrop');
+      function openSidebar() {
+        sidebar.classList.add('open');
+        backdrop.classList.add('open');
+      }
+      function closeSidebar() {
+        sidebar.classList.remove('open');
+        backdrop.classList.remove('open');
+      }
+      toggleBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        openSidebar();
+      });
+      backdrop.addEventListener('click', closeSidebar);
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeSidebar();
+      });
+      sidebar.addEventListener('click', function(e) {
+        if (e.target.tagName === 'A' || e.target.classList.contains('btn')) {
+          closeSidebar();
+        }
+      });
+    })();
+
     // Set sidebar username and balance
     async function getUserInfo() {
       try {

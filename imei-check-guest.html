@@ -111,6 +111,7 @@
       box-shadow: 2px 0 12px 0 rgba(0,0,0,0.18);
       z-index: 100;
       padding-top: 90px;
+      transition: transform 0.2s cubic-bezier(.4,0,.2,1);
     }
     .sidebar-guest-label {
       margin: 0 0 16px 0;
@@ -185,6 +186,26 @@
       background: var(--success);
       margin-top: 8px;
     }
+    /* --- Responsive Sidebar Hamburguesa (móvil) --- */
+    .sidebar-toggle-btn {
+      display: none;
+      position: absolute;
+      left: 16px;
+      top: 18px;
+      background: none;
+      border: none;
+      color: var(--accent);
+      font-size: 2.3em;
+      z-index: 200;
+      cursor: pointer;
+    }
+    .sidebar-backdrop {
+      display: none;
+      background: rgba(0,0,0,0.32);
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: 99;
+    }
     @media (max-width: 900px) {
       .sidebar { width: 60px; min-width: 60px; }
       .sidebar-guest-label { font-size: 1rem; padding: 0 6px; }
@@ -192,10 +213,27 @@
       .header-inner { padding: 0 8px; }
     }
     @media (max-width: 650px) {
-      .sidebar { display: none; }
-      .header-inner { flex-direction: column; gap: 6px; height: auto; }
-      .header-title-center { position: static; }
+      .header-inner {
+        justify-content: flex-start;
+        padding-right: 0;
+        padding-left: 0;
+      }
+      .sidebar { transform: translateX(-100%); width: 85vw; max-width: 310px; display: flex; }
+      .sidebar.open { transform: translateX(0); display: flex; }
+      .sidebar-toggle-btn { display: block; margin-left: 8px; z-index: 3; background: none; border: none; }
+      .sidebar-backdrop.open { display: block; }
       .main-content { margin-left: 0 !important; }
+      .header-title-center {
+        flex: 1;
+        justify-content: center;
+        align-items: center;
+        position: static;
+        pointer-events: none;
+      }
+      .logo-title {
+        font-size: 1.3rem;
+        pointer-events: auto;
+      }
     }
     .main-content {
       flex: 1 1 0;
@@ -212,7 +250,13 @@
       .main-content { margin-left: 60px; }
     }
     @media (max-width: 650px) {
-      .main-content { margin-left: 0; }
+      .main-content {
+        margin-left: 0;
+        width: 100vw !important;
+        min-width: 100vw !important;
+        display: block !important;
+        padding: 0 !important;
+      }
     }
     .imei-check-box {
       max-width: 420px;
@@ -259,6 +303,8 @@
       text-align: center;
       box-sizing: border-box;
       appearance: none;
+      min-width: 0;
+      max-width: 100%;
     }
     .imei-check-box input[type="text"]:focus, 
     .imei-check-box input[type="email"]:focus, 
@@ -379,21 +425,41 @@
       color: #fff;
       opacity: 1;
     }
+    @media (max-width: 650px) {
+      .imei-check-box {
+        max-width: 100vw !important;
+        width: 100vw !important;
+        min-width: 100vw !important;
+        border-radius: 0 !important;
+        box-sizing: border-box;
+        padding: 18px 5vw !important;
+        margin: 0 !important;
+      }
+    }
     @media (max-width: 520px) {
       .imei-check-box {
-        padding: 18px 8px;
-        max-width: 98vw;
+        padding: 10px 2vw !important;
       }
       .main-content {
         margin-top: 24px;
+        padding: 0;
       }
       .sidebar-nav { gap: 4px; }
+      .imei-check-box input[type="text"],
+      .imei-check-box input[type="email"],
+      .imei-check-box select {
+        padding: 13px 6px;
+        font-size: 1rem;
+        min-width: 0;
+        max-width: 100vw;
+      }
     }
   </style>
 </head>
 <body>
   <header>
     <div class="header-inner">
+      <button class="sidebar-toggle-btn" id="sidebarToggleBtn" aria-label="Open menu"><i class="ri-menu-line"></i></button>
       <div class="header-title-center">
         <a class="logo-title" href="index.html">
           <i class="ri-shield-check-fill"></i> IMEICHECK2.COM
@@ -403,7 +469,7 @@
   </header>
 
   <div id="mainLayout">
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebarNav">
       <div class="sidebar-guest-label">
         <i class="ri-user-3-fill"></i>
         <span>Guest</span>
@@ -417,6 +483,7 @@
         <button class="btn" id="registerBtnNav" style="background:var(--success);margin-top:8px;">Register</button>
       </nav>
     </aside>
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
     <main class="main-content">
       <div class="imei-check-box">
         <h2>IMEI Check (Guest)</h2>
@@ -465,6 +532,34 @@
   </footer>
 
   <script>
+    // Sidebar responsive toggle
+    (function() {
+      const sidebar = document.getElementById('sidebarNav');
+      const toggleBtn = document.getElementById('sidebarToggleBtn');
+      const backdrop = document.getElementById('sidebarBackdrop');
+      function openSidebar() {
+        sidebar.classList.add('open');
+        backdrop.classList.add('open');
+      }
+      function closeSidebar() {
+        sidebar.classList.remove('open');
+        backdrop.classList.remove('open');
+      }
+      toggleBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        openSidebar();
+      });
+      backdrop.addEventListener('click', closeSidebar);
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeSidebar();
+      });
+      sidebar.addEventListener('click', function(e) {
+        if (e.target.tagName === 'A' || e.target.classList.contains('btn') || e.target.classList.contains('sidebar-imei-btn')) {
+          closeSidebar();
+        }
+      });
+    })();
+
     // Prefill IMEI and email if passed in URL
     function getQueryParam(name) {
       const urlParams = new URLSearchParams(window.location.search);
