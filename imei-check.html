@@ -640,15 +640,15 @@
         // SOLO mostrar el texto de api.result de cada IMEI
         if (Array.isArray(data)) {
           imeiResultBox.innerHTML = data.map(item =>
-  imeiResultBox.innerHTML = data.map(item =>
-  `<div style="background:#23272a;padding:18px 14px;border-radius:14px;margin-top:20px;white-space:pre-line;">
+ imeiResultBox.innerHTML = data.map(function(item) {
+  return `<div style="background:#23272a;padding:18px 14px;border-radius:14px;margin-top:20px;white-space:pre-line;">
     ${
       item && item.api && typeof item.api.result === "string" && item.api.result
         ? item.api.result
         : (item.error ? `<span style="color:#f55">${item.error}</span>` : "Sin resultado")
     }
-  </div>`
-).join('');
+  </div>`;
+}).join('');
         } else if (data.api && typeof data.api.result === "string") {
           imeiResultBox.innerHTML = `<div style="background:#23272a;padding:18px 14px;border-radius:14px;margin-top:20px;white-space:pre-line;">${data.api.result}</div>`;
         } else if (typeof data.result === "string") {
