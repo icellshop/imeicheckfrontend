@@ -137,13 +137,13 @@
     (async function() {
       const token = localStorage.getItem('token');
       if (!token) {
-        window.location.href = 'index.htm.tml';
+        window.location.href = 'index.html';
         return;
       }
       try {
         const res = await fetch(window.BACKEND_URL + '/api/users/me', { headers: { Authorization: 'Bearer ' + token } });
         if (!res.ok) {
-          window.location.href = 'index.htm.tml';
+          window.location.href = 'index.html';
           return;
         }
         const user = await res.json();
@@ -155,14 +155,14 @@
           return;
         }
       } catch (e) {
-        window.location.href = 'index.htm.tml';
+        window.location.href = 'index.html';
       }
     })();
 
     // Logout
     document.getElementById('logoutBtn').onclick = function() {
       localStorage.removeItem('token');
-      window.location.href = 'index.htm.tml';
+      window.location.href = 'index.html';
     };
 
     // Sidebar responsive toggle
